@@ -1,8 +1,8 @@
-﻿using GreenFlux.Application.Common.Interfaces;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
+using GreenFlux.Application.Common.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GreenFlux.Application.TodoLists.Commands.CreateTodoList
 {

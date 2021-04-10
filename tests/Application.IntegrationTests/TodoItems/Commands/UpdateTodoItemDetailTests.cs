@@ -1,14 +1,14 @@
-﻿using GreenFlux.Application.Common.Exceptions;
+﻿using System;
+using System.Threading.Tasks;
+using FluentAssertions;
+using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.TodoItems.Commands.CreateTodoItem;
 using GreenFlux.Application.TodoItems.Commands.UpdateTodoItem;
 using GreenFlux.Application.TodoItems.Commands.UpdateTodoItemDetail;
 using GreenFlux.Application.TodoLists.Commands.CreateTodoList;
 using GreenFlux.Domain.Entities;
 using GreenFlux.Domain.Enums;
-using FluentAssertions;
-using System.Threading.Tasks;
 using NUnit.Framework;
-using System;
 
 namespace GreenFlux.Application.IntegrationTests.TodoItems.Commands
 {
@@ -32,8 +32,6 @@ namespace GreenFlux.Application.IntegrationTests.TodoItems.Commands
         [Test]
         public async Task ShouldUpdateTodoItem()
         {
-            var userId = await RunAsDefaultUserAsync();
-
             var listId = await SendAsync(new CreateTodoListCommand
             {
                 Title = "New List"
@@ -61,7 +59,6 @@ namespace GreenFlux.Application.IntegrationTests.TodoItems.Commands
             item.Note.Should().Be(command.Note);
             item.Priority.Should().Be(command.Priority);
             item.LastModifiedBy.Should().NotBeNull();
-            item.LastModifiedBy.Should().Be(userId);
             item.LastModified.Should().NotBeNull();
             item.LastModified.Should().BeCloseTo(DateTime.Now, 10000);
         }

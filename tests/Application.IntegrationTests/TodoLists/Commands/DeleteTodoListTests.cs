@@ -1,10 +1,10 @@
-﻿using GreenFlux.Application.Common.Exceptions;
+﻿using System.Threading.Tasks;
+using FluentAssertions;
+using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.TodoLists.Commands.CreateTodoList;
 using GreenFlux.Application.TodoLists.Commands.DeleteTodoList;
 using GreenFlux.Domain.Entities;
-using FluentAssertions;
 using NUnit.Framework;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
 {
@@ -15,7 +15,7 @@ namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
         [Test]
         public void ShouldRequireValidTodoListId()
         {
-            var command = new DeleteTodoListCommand { Id = 99 };
+            var command = new DeleteTodoListCommand {Id = 99};
 
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().Throw<NotFoundException>();
@@ -29,9 +29,9 @@ namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
                 Title = "New List"
             });
 
-            await SendAsync(new DeleteTodoListCommand 
-            { 
-                Id = listId 
+            await SendAsync(new DeleteTodoListCommand
+            {
+                Id = listId
             });
 
             var list = await FindAsync<TodoList>(listId);

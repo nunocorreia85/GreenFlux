@@ -1,10 +1,10 @@
-﻿using GreenFlux.Application.TodoLists.Queries.GetTodos;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using FluentAssertions;
+using GreenFlux.Application.TodoLists.Queries.GetTodos;
 using GreenFlux.Domain.Entities;
 using GreenFlux.Domain.ValueObjects;
-using FluentAssertions;
 using NUnit.Framework;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.IntegrationTests.TodoLists.Queries
 {
@@ -30,15 +30,15 @@ namespace GreenFlux.Application.IntegrationTests.TodoLists.Queries
                 Title = "Shopping",
                 Colour = Colour.Blue,
                 Items =
-                    {
-                        new TodoItem { Title = "Apples", Done = true },
-                        new TodoItem { Title = "Milk", Done = true },
-                        new TodoItem { Title = "Bread", Done = true },
-                        new TodoItem { Title = "Toilet paper" },
-                        new TodoItem { Title = "Pasta" },
-                        new TodoItem { Title = "Tissues" },
-                        new TodoItem { Title = "Tuna" }
-                    }
+                {
+                    new TodoItem {Title = "Apples", Done = true},
+                    new TodoItem {Title = "Milk", Done = true},
+                    new TodoItem {Title = "Bread", Done = true},
+                    new TodoItem {Title = "Toilet paper"},
+                    new TodoItem {Title = "Pasta"},
+                    new TodoItem {Title = "Tissues"},
+                    new TodoItem {Title = "Tuna"}
+                }
             });
 
             var query = new GetTodosQuery();

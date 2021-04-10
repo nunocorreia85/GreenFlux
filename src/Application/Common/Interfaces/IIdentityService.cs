@@ -1,5 +1,5 @@
-﻿using GreenFlux.Application.Common.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using GreenFlux.Application.Common.Models;
 
 namespace GreenFlux.Application.Common.Interfaces
 {

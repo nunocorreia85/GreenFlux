@@ -1,11 +1,11 @@
-﻿using GreenFlux.Application.Common.Exceptions;
+﻿using System;
+using System.Threading.Tasks;
+using FluentAssertions;
+using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.TodoLists.Commands.CreateTodoList;
 using GreenFlux.Application.TodoLists.Commands.UpdateTodoList;
 using GreenFlux.Domain.Entities;
-using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
 {
@@ -46,16 +46,14 @@ namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
             };
 
             FluentActions.Invoking(() =>
-                SendAsync(command))
-                    .Should().Throw<ValidationException>().Where(ex => ex.Errors.ContainsKey("Title"))
-                    .And.Errors["Title"].Should().Contain("The specified title already exists.");
+                    SendAsync(command))
+                .Should().Throw<ValidationException>().Where(ex => ex.Errors.ContainsKey("Title"))
+                .And.Errors["Title"].Should().Contain("The specified title already exists.");
         }
 
         [Test]
         public async Task ShouldUpdateTodoList()
         {
-            var userId = await RunAsDefaultUserAsync();
-
             var listId = await SendAsync(new CreateTodoListCommand
             {
                 Title = "New List"
@@ -73,7 +71,6 @@ namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
 
             list.Title.Should().Be(command.Title);
             list.LastModifiedBy.Should().NotBeNull();
-            list.LastModifiedBy.Should().Be(userId);
             list.LastModified.Should().NotBeNull();
             list.LastModified.Should().BeCloseTo(DateTime.Now, 1000);
         }

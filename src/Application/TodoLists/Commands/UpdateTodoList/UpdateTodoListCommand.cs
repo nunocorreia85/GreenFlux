@@ -1,9 +1,9 @@
-﻿using GreenFlux.Application.Common.Exceptions;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Domain.Entities;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.TodoLists.Commands.UpdateTodoList
 {
@@ -27,10 +27,7 @@ namespace GreenFlux.Application.TodoLists.Commands.UpdateTodoList
         {
             var entity = await _context.TodoLists.FindAsync(request.Id);
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(TodoList), request.Id);
-            }
+            if (entity == null) throw new NotFoundException(nameof(TodoList), request.Id);
 
             entity.Title = request.Title;
 

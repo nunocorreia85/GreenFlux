@@ -1,9 +1,9 @@
-﻿using GreenFlux.Application.Common.Interfaces;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
+using GreenFlux.Application.Common.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace GreenFlux.Application.TodoLists.Commands.UpdateTodoList
 {
@@ -21,7 +21,8 @@ namespace GreenFlux.Application.TodoLists.Commands.UpdateTodoList
                 .MustAsync(BeUniqueTitle).WithMessage("The specified title already exists.");
         }
 
-        public async Task<bool> BeUniqueTitle(UpdateTodoListCommand model, string title, CancellationToken cancellationToken)
+        public async Task<bool> BeUniqueTitle(UpdateTodoListCommand model, string title,
+            CancellationToken cancellationToken)
         {
             return await _context.TodoLists
                 .Where(l => l.Id != model.Id)

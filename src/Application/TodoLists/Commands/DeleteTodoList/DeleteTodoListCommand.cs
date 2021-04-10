@@ -1,11 +1,11 @@
-﻿using GreenFlux.Application.Common.Exceptions;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.TodoLists.Commands.DeleteTodoList
 {
@@ -29,10 +29,7 @@ namespace GreenFlux.Application.TodoLists.Commands.DeleteTodoList
                 .Where(l => l.Id == request.Id)
                 .SingleOrDefaultAsync(cancellationToken);
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(TodoList), request.Id);
-            }
+            if (entity == null) throw new NotFoundException(nameof(TodoList), request.Id);
 
             _context.TodoLists.Remove(entity);
 

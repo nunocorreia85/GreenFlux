@@ -1,9 +1,9 @@
-﻿using GreenFlux.Application.Common.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Domain.Entities;
 using GreenFlux.Domain.Events;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.TodoItems.Commands.CreateTodoItem
 {

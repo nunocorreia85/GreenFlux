@@ -1,9 +1,9 @@
-﻿using GreenFlux.Application.WeatherForecasts.Queries.GetWeatherForecasts;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using GreenFlux.Application.WeatherForecasts.Queries.GetWeatherForecasts;
+using Microsoft.AspNetCore.Mvc;
 
-namespace GreenFlux.WebUI.Controllers
+namespace GreenFlux.Api.Controllers
 {
     public class WeatherForecastController : ApiControllerBase
     {

@@ -1,13 +1,14 @@
-﻿using GreenFlux.Domain.Common;
+﻿using System;
+using System.Collections.Generic;
+using GreenFlux.Domain.Common;
 using GreenFlux.Domain.Enums;
 using GreenFlux.Domain.Events;
-using System;
-using System.Collections.Generic;
 
 namespace GreenFlux.Domain.Entities
 {
     public class TodoItem : AuditableEntity, IHasDomainEvent
     {
+        private bool _done;
         public int Id { get; set; }
 
         public TodoList List { get; set; }
@@ -22,21 +23,17 @@ namespace GreenFlux.Domain.Entities
 
         public DateTime? Reminder { get; set; }
 
-        private bool _done;
         public bool Done
         {
             get => _done;
             set
             {
-                if (value == true && _done == false)
-                {
-                    DomainEvents.Add(new TodoItemCompletedEvent(this));
-                }
+                if (value && _done == false) DomainEvents.Add(new TodoItemCompletedEvent(this));
 
                 _done = value;
             }
         }
 
-        public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
+        public List<DomainEvent> DomainEvents { get; set; } = new();
     }
 }

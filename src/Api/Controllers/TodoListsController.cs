@@ -1,15 +1,13 @@
-﻿using GreenFlux.Application.TodoLists.Commands.CreateTodoList;
+﻿using System.Threading.Tasks;
+using GreenFlux.Application.TodoLists.Commands.CreateTodoList;
 using GreenFlux.Application.TodoLists.Commands.DeleteTodoList;
 using GreenFlux.Application.TodoLists.Commands.UpdateTodoList;
 using GreenFlux.Application.TodoLists.Queries.ExportTodos;
 using GreenFlux.Application.TodoLists.Queries.GetTodos;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
-namespace GreenFlux.WebUI.Controllers
+namespace GreenFlux.Api.Controllers
 {
-    [Authorize]
     public class TodoListsController : ApiControllerBase
     {
         [HttpGet]
@@ -21,7 +19,7 @@ namespace GreenFlux.WebUI.Controllers
         [HttpGet("{id}")]
         public async Task<FileResult> Get(int id)
         {
-            var vm = await Mediator.Send(new ExportTodosQuery { ListId = id });
+            var vm = await Mediator.Send(new ExportTodosQuery {ListId = id});
 
             return File(vm.Content, vm.ContentType, vm.FileName);
         }
@@ -35,10 +33,7 @@ namespace GreenFlux.WebUI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, UpdateTodoListCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
+            if (id != command.Id) return BadRequest();
 
             await Mediator.Send(command);
 
@@ -48,7 +43,7 @@ namespace GreenFlux.WebUI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteTodoListCommand { Id = id });
+            await Mediator.Send(new DeleteTodoListCommand {Id = id});
 
             return NoContent();
         }

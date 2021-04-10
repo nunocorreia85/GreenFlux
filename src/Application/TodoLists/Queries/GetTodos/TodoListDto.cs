@@ -1,6 +1,6 @@
-﻿using GreenFlux.Application.Common.Mappings;
+﻿using System.Collections.Generic;
+using GreenFlux.Application.Common.Mappings;
 using GreenFlux.Domain.Entities;
-using System.Collections.Generic;
 
 namespace GreenFlux.Application.TodoLists.Queries.GetTodos
 {

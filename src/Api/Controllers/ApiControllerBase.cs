@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GreenFlux.WebUI.Controllers
+namespace GreenFlux.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

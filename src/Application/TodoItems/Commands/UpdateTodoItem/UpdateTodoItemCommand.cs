@@ -1,9 +1,9 @@
-﻿using GreenFlux.Application.Common.Exceptions;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Domain.Entities;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.TodoItems.Commands.UpdateTodoItem
 {
@@ -29,10 +29,7 @@ namespace GreenFlux.Application.TodoItems.Commands.UpdateTodoItem
         {
             var entity = await _context.TodoItems.FindAsync(request.Id);
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(TodoItem), request.Id);
-            }
+            if (entity == null) throw new NotFoundException(nameof(TodoItem), request.Id);
 
             entity.Title = request.Title;
             entity.Done = request.Done;

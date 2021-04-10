@@ -1,173 +1,114 @@
-﻿using GreenFlux.Application.Common.Interfaces;
-using GreenFlux.Infrastructure.Identity;
+﻿using System.IO;
+using System.Threading.Tasks;
+using GreenFlux.Api;
 using GreenFlux.Infrastructure.Persistence;
-using GreenFlux.WebUI;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NUnit.Framework;
 using Respawn;
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
-[SetUpFixture]
-public class Testing
+namespace GreenFlux.Application.IntegrationTests
 {
-    private static IConfigurationRoot _configuration;
-    private static IServiceScopeFactory _scopeFactory;
-    private static Checkpoint _checkpoint;
-    private static string _currentUserId;
-
-    [OneTimeSetUp]
-    public void RunBeforeAnyTests()
+    [SetUpFixture]
+    public class Testing
     {
-        var builder = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json", true, true)
-            .AddEnvironmentVariables();
+        private static IConfigurationRoot _configuration;
+        private static IServiceScopeFactory _scopeFactory;
+        private static Checkpoint _checkpoint;
 
-        _configuration = builder.Build();
-
-        var startup = new Startup(_configuration);
-
-        var services = new ServiceCollection();
-
-        services.AddSingleton(Mock.Of<IWebHostEnvironment>(w =>
-            w.EnvironmentName == "Development" &&
-            w.ApplicationName == "GreenFlux.WebUI"));
-
-        services.AddLogging();
-
-        startup.ConfigureServices(services);
-
-        // Replace service registration for ICurrentUserService
-        // Remove existing registration
-        var currentUserServiceDescriptor = services.FirstOrDefault(d =>
-            d.ServiceType == typeof(ICurrentUserService));
-
-        services.Remove(currentUserServiceDescriptor);
-
-        // Register testing version
-        services.AddTransient(provider =>
-            Mock.Of<ICurrentUserService>(s => s.UserId == _currentUserId));
-
-        _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
-
-        _checkpoint = new Checkpoint
+        [OneTimeSetUp]
+        public void RunBeforeAnyTests()
         {
-            TablesToIgnore = new[] { "__EFMigrationsHistory" }
-        };
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", true, true)
+                .AddEnvironmentVariables();
 
-        EnsureDatabase();
-    }
+            _configuration = builder.Build();
 
-    private static void EnsureDatabase()
-    {
-        using var scope = _scopeFactory.CreateScope();
+            var startup = new Startup(_configuration);
 
-        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+            var services = new ServiceCollection();
 
-        context.Database.Migrate();
-    }
+            services.AddSingleton(Mock.Of<IWebHostEnvironment>(w =>
+                w.EnvironmentName == "Development" &&
+                w.ApplicationName == "GreenFlux.Api"));
 
-    public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
-    {
-        using var scope = _scopeFactory.CreateScope();
+            services.AddLogging();
 
-        var mediator = scope.ServiceProvider.GetService<ISender>();
+            startup.ConfigureServices(services);
 
-        return await mediator.Send(request);
-    }
+            _scopeFactory = services.BuildServiceProvider().GetService<IServiceScopeFactory>();
 
-    public static async Task<string> RunAsDefaultUserAsync()
-    {
-        return await RunAsUserAsync("test@local", "Testing1234!", new string[] { });
-    }
-
-    public static async Task<string> RunAsAdministratorAsync()
-    {
-        return await RunAsUserAsync("administrator@local", "Administrator1234!", new[] { "Administrator" });
-    }
-
-    public static async Task<string> RunAsUserAsync(string userName, string password, string[] roles)
-    {
-        using var scope = _scopeFactory.CreateScope();
-
-        var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
-
-        var user = new ApplicationUser { UserName = userName, Email = userName };
-
-        var result = await userManager.CreateAsync(user, password);
-
-        if (roles.Any())
-        {
-            var roleManager = scope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
-
-            foreach (var role in roles)
+            _checkpoint = new Checkpoint
             {
-                await roleManager.CreateAsync(new IdentityRole(role));
-            }
+                TablesToIgnore = new[] {"__EFMigrationsHistory"}
+            };
 
-            await userManager.AddToRolesAsync(user, roles);
+            EnsureDatabase();
         }
 
-        if (result.Succeeded)
+        private static void EnsureDatabase()
         {
-            _currentUserId = user.Id;
+            using var scope = _scopeFactory.CreateScope();
 
-            return _currentUserId;
+            var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+
+            context.Database.Migrate();
         }
 
-        var errors = string.Join(Environment.NewLine, result.ToApplicationResult().Errors);
+        public static async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request)
+        {
+            using var scope = _scopeFactory.CreateScope();
 
-        throw new Exception($"Unable to create {userName}.{Environment.NewLine}{errors}");
-    }
+            var mediator = scope.ServiceProvider.GetService<ISender>();
 
-    public static async Task ResetState()
-    {
-        await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
-        _currentUserId = null;
-    }
+            return await mediator.Send(request);
+        }
 
-    public static async Task<TEntity> FindAsync<TEntity>(params object[] keyValues)
-        where TEntity : class
-    {
-        using var scope = _scopeFactory.CreateScope();
+        public static async Task ResetState()
+        {
+            await _checkpoint.Reset(_configuration.GetConnectionString("DefaultConnection"));
+        }
 
-        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+        public static async Task<TEntity> FindAsync<TEntity>(params object[] keyValues)
+            where TEntity : class
+        {
+            using var scope = _scopeFactory.CreateScope();
 
-        return await context.FindAsync<TEntity>(keyValues);
-    }
+            var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
-    public static async Task AddAsync<TEntity>(TEntity entity)
-        where TEntity : class
-    {
-        using var scope = _scopeFactory.CreateScope();
+            return await context.FindAsync<TEntity>(keyValues);
+        }
 
-        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+        public static async Task AddAsync<TEntity>(TEntity entity)
+            where TEntity : class
+        {
+            using var scope = _scopeFactory.CreateScope();
 
-        context.Add(entity);
+            var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
-        await context.SaveChangesAsync();
-    }
+            context.Add(entity);
 
-    public static async Task<int> CountAsync<TEntity>() where TEntity : class
-    {
-        using var scope = _scopeFactory.CreateScope();
+            await context.SaveChangesAsync();
+        }
 
-        var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+        public static async Task<int> CountAsync<TEntity>() where TEntity : class
+        {
+            using var scope = _scopeFactory.CreateScope();
 
-        return await context.Set<TEntity>().CountAsync();
-    }
+            var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
-    [OneTimeTearDown]
-    public void RunAfterAnyTests()
-    {
+            return await context.Set<TEntity>().CountAsync();
+        }
+
+        [OneTimeTearDown]
+        public void RunAfterAnyTests()
+        {
+        }
     }
 }

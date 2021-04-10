@@ -21,7 +21,7 @@ namespace GreenFlux.Application.TodoLists.Queries.GetTodos
         public void Mapping(Profile profile)
         {
             profile.CreateMap<TodoItem, TodoItemDto>()
-                .ForMember(d => d.Priority, opt => opt.MapFrom(s => (int)s.Priority));
+                .ForMember(d => d.Priority, opt => opt.MapFrom(s => (int) s.Priority));
         }
     }
 }

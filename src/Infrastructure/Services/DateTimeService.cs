@@ -1,5 +1,5 @@
-﻿using GreenFlux.Application.Common.Interfaces;
-using System;
+﻿using System;
+using GreenFlux.Application.Common.Interfaces;
 
 namespace GreenFlux.Infrastructure.Services
 {

@@ -1,6 +1,6 @@
-﻿using GreenFlux.Domain.Exceptions;
+﻿using FluentAssertions;
+using GreenFlux.Domain.Exceptions;
 using GreenFlux.Domain.ValueObjects;
-using FluentAssertions;
 using NUnit.Framework;
 
 namespace GreenFlux.Domain.UnitTests.ValueObjects
@@ -36,7 +36,7 @@ namespace GreenFlux.Domain.UnitTests.ValueObjects
         [Test]
         public void ShouldPerformExplicitConversionGivenSupportedColourCode()
         {
-            var colour = (Colour)"#FFFFFF";
+            var colour = (Colour) "#FFFFFF";
 
             colour.Should().Be(Colour.White);
         }

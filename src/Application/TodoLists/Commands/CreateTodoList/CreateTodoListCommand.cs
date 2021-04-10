@@ -1,8 +1,8 @@
-﻿using GreenFlux.Application.Common.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Domain.Entities;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.TodoLists.Commands.CreateTodoList
 {

@@ -17,12 +17,12 @@ namespace GreenFlux.Application.Common.Models
 
         public static Result Success()
         {
-            return new Result(true, new string[] { });
+            return new(true, new string[] { });
         }
 
         public static Result Failure(IEnumerable<string> errors)
         {
-            return new Result(false, errors);
+            return new(false, errors);
         }
     }
 }

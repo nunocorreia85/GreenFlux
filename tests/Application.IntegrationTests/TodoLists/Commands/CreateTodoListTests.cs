@@ -1,10 +1,10 @@
-﻿using GreenFlux.Application.Common.Exceptions;
+﻿using System;
+using System.Threading.Tasks;
+using FluentAssertions;
+using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.TodoLists.Commands.CreateTodoList;
 using GreenFlux.Domain.Entities;
-using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
 {
@@ -41,8 +41,6 @@ namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
         [Test]
         public async Task ShouldCreateTodoList()
         {
-            var userId = await RunAsDefaultUserAsync();
-
             var command = new CreateTodoListCommand
             {
                 Title = "Tasks"
@@ -54,7 +52,6 @@ namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
 
             list.Should().NotBeNull();
             list.Title.Should().Be(command.Title);
-            list.CreatedBy.Should().Be(userId);
             list.Created.Should().BeCloseTo(DateTime.Now, 10000);
         }
     }

@@ -1,21 +1,20 @@
-﻿using GreenFlux.Application.Common.Models;
+﻿using System.Threading.Tasks;
+using GreenFlux.Application.Common.Models;
 using GreenFlux.Application.TodoItems.Commands.CreateTodoItem;
 using GreenFlux.Application.TodoItems.Commands.DeleteTodoItem;
 using GreenFlux.Application.TodoItems.Commands.UpdateTodoItem;
 using GreenFlux.Application.TodoItems.Commands.UpdateTodoItemDetail;
 using GreenFlux.Application.TodoItems.Queries.GetTodoItemsWithPagination;
 using GreenFlux.Application.TodoLists.Queries.GetTodos;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
-namespace GreenFlux.WebUI.Controllers
+namespace GreenFlux.Api.Controllers
 {
-    [Authorize]
     public class TodoItemsController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<TodoItemDto>>> GetTodoItemsWithPagination([FromQuery] GetTodoItemsWithPaginationQuery query)
+        public async Task<ActionResult<PaginatedList<TodoItemDto>>> GetTodoItemsWithPagination(
+            [FromQuery] GetTodoItemsWithPaginationQuery query)
         {
             return await Mediator.Send(query);
         }
@@ -29,10 +28,7 @@ namespace GreenFlux.WebUI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, UpdateTodoItemCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
+            if (id != command.Id) return BadRequest();
 
             await Mediator.Send(command);
 
@@ -42,10 +38,7 @@ namespace GreenFlux.WebUI.Controllers
         [HttpPut("[action]")]
         public async Task<ActionResult> UpdateItemDetails(int id, UpdateTodoItemDetailCommand command)
         {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
+            if (id != command.Id) return BadRequest();
 
             await Mediator.Send(command);
 
@@ -55,7 +48,7 @@ namespace GreenFlux.WebUI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteTodoItemCommand { Id = id });
+            await Mediator.Send(new DeleteTodoItemCommand {Id = id});
 
             return NoContent();
         }

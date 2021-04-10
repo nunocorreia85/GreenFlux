@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Runtime.Serialization;
+using AutoMapper;
 using GreenFlux.Application.Common.Mappings;
 using GreenFlux.Application.TodoLists.Queries.GetTodos;
 using GreenFlux.Domain.Entities;
 using NUnit.Framework;
-using System;
-using System.Runtime.Serialization;
 
 namespace GreenFlux.Application.UnitTests.Common.Mappings
 {
@@ -15,10 +15,7 @@ namespace GreenFlux.Application.UnitTests.Common.Mappings
 
         public MappingTests()
         {
-            _configuration = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<MappingProfile>();
-            });
+            _configuration = new MapperConfiguration(cfg => { cfg.AddProfile<MappingProfile>(); });
 
             _mapper = _configuration.CreateMapper();
         }
@@ -28,7 +25,7 @@ namespace GreenFlux.Application.UnitTests.Common.Mappings
         {
             _configuration.AssertConfigurationIsValid();
         }
-        
+
         [Test]
         [TestCase(typeof(TodoList), typeof(TodoListDto))]
         [TestCase(typeof(TodoItem), typeof(TodoItemDto))]

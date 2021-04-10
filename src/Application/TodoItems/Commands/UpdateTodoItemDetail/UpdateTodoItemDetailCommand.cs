@@ -1,10 +1,10 @@
-﻿using GreenFlux.Application.Common.Exceptions;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Domain.Entities;
 using GreenFlux.Domain.Enums;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.TodoItems.Commands.UpdateTodoItemDetail
 {
@@ -32,10 +32,7 @@ namespace GreenFlux.Application.TodoItems.Commands.UpdateTodoItemDetail
         {
             var entity = await _context.TodoItems.FindAsync(request.Id);
 
-            if (entity == null)
-            {
-                throw new NotFoundException(nameof(TodoItem), request.Id);
-            }
+            if (entity == null) throw new NotFoundException(nameof(TodoItem), request.Id);
 
             entity.ListId = request.ListId;
             entity.Priority = request.Priority;

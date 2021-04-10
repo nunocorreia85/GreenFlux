@@ -1,8 +1,8 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace GreenFlux.Application.Common.Behaviours
 {
@@ -15,7 +15,8 @@ namespace GreenFlux.Application.Common.Behaviours
             _logger = logger;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+            RequestHandlerDelegate<TResponse> next)
         {
             try
             {
@@ -25,7 +26,8 @@ namespace GreenFlux.Application.Common.Behaviours
             {
                 var requestName = typeof(TRequest).Name;
 
-                _logger.LogError(ex, "GreenFlux Request: Unhandled Exception for Request {Name} {@Request}", requestName, request);
+                _logger.LogError(ex, "GreenFlux Request: Unhandled Exception for Request {Name} {@Request}",
+                    requestName, request);
 
                 throw;
             }

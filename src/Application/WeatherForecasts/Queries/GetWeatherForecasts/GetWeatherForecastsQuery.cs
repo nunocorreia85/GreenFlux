@@ -1,9 +1,9 @@
-﻿using MediatR;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 
 namespace GreenFlux.Application.WeatherForecasts.Queries.GetWeatherForecasts
 {
@@ -11,14 +11,16 @@ namespace GreenFlux.Application.WeatherForecasts.Queries.GetWeatherForecasts
     {
     }
 
-    public class GetWeatherForecastsQueryHandler : IRequestHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecast>>
+    public class
+        GetWeatherForecastsQueryHandler : IRequestHandler<GetWeatherForecastsQuery, IEnumerable<WeatherForecast>>
     {
-        private static readonly string[] Summaries = new[]
+        private static readonly string[] Summaries =
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        public Task<IEnumerable<WeatherForecast>> Handle(GetWeatherForecastsQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<WeatherForecast>> Handle(GetWeatherForecastsQuery request,
+            CancellationToken cancellationToken)
         {
             var rng = new Random();
 

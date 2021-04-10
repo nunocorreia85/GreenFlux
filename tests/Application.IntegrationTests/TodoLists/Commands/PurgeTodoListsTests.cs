@@ -1,13 +1,12 @@
-﻿using GreenFlux.Application.Common.Exceptions;
+﻿using System;
+using System.Threading.Tasks;
+using FluentAssertions;
+using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.Common.Security;
 using GreenFlux.Application.TodoLists.Commands.CreateTodoList;
 using GreenFlux.Application.TodoLists.Commands.PurgeTodoLists;
-using GreenFlux.Application.TodoLists.Queries.ExportTodos;
 using GreenFlux.Domain.Entities;
-using FluentAssertions;
 using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
 {
@@ -27,10 +26,8 @@ namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
         }
 
         [Test]
-        public async Task ShouldDenyNonAdministrator()
+        public void ShouldDenyNonAdministrator()
         {
-            await RunAsDefaultUserAsync();
-
             var command = new PurgeTodoListsCommand();
 
             FluentActions.Invoking(() =>
@@ -38,10 +35,8 @@ namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
         }
 
         [Test]
-        public async Task ShouldAllowAdministrator()
+        public void ShouldAllowAdministrator()
         {
-            await RunAsAdministratorAsync();
-
             var command = new PurgeTodoListsCommand();
 
             FluentActions.Invoking(() => SendAsync(command))
@@ -51,8 +46,6 @@ namespace GreenFlux.Application.IntegrationTests.TodoLists.Commands
         [Test]
         public async Task ShouldDeleteAllLists()
         {
-            await RunAsAdministratorAsync();
-
             await SendAsync(new CreateTodoListCommand
             {
                 Title = "New List #1"

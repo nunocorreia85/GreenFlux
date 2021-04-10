@@ -1,9 +1,9 @@
-﻿using GreenFlux.Application.Common.Models;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using GreenFlux.Application.Common.Models;
 using GreenFlux.Domain.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.TodoItems.EventHandlers
 {
@@ -16,7 +16,8 @@ namespace GreenFlux.Application.TodoItems.EventHandlers
             _logger = logger;
         }
 
-        public Task Handle(DomainEventNotification<TodoItemCompletedEvent> notification, CancellationToken cancellationToken)
+        public Task Handle(DomainEventNotification<TodoItemCompletedEvent> notification,
+            CancellationToken cancellationToken)
         {
             var domainEvent = notification.DomainEvent;
 

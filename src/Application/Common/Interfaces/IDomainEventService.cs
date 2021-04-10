@@ -1,5 +1,5 @@
-﻿using GreenFlux.Domain.Common;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using GreenFlux.Domain.Common;
 
 namespace GreenFlux.Application.Common.Interfaces
 {

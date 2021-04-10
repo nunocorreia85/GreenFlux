@@ -1,10 +1,10 @@
-﻿using GreenFlux.Application.Common.Exceptions;
+﻿using System.Threading.Tasks;
+using FluentAssertions;
+using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.TodoItems.Commands.CreateTodoItem;
 using GreenFlux.Application.TodoItems.Commands.DeleteTodoItem;
 using GreenFlux.Application.TodoLists.Commands.CreateTodoList;
 using GreenFlux.Domain.Entities;
-using FluentAssertions;
-using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace GreenFlux.Application.IntegrationTests.TodoItems.Commands
@@ -16,7 +16,7 @@ namespace GreenFlux.Application.IntegrationTests.TodoItems.Commands
         [Test]
         public void ShouldRequireValidTodoItemId()
         {
-            var command = new DeleteTodoItemCommand { Id = 99 };
+            var command = new DeleteTodoItemCommand {Id = 99};
 
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().Throw<NotFoundException>();

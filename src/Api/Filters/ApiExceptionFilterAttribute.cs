@@ -1,15 +1,14 @@
-﻿using GreenFlux.Application.Common.Exceptions;
+﻿using System;
+using System.Collections.Generic;
+using GreenFlux.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
 
-namespace GreenFlux.WebUI.Filters
+namespace GreenFlux.Api.Filters
 {
     public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {
-
         private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
 
         public ApiExceptionFilterAttribute()
@@ -17,10 +16,10 @@ namespace GreenFlux.WebUI.Filters
             // Register known exception types and handlers.
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
-                { typeof(ValidationException), HandleValidationException },
-                { typeof(NotFoundException), HandleNotFoundException },
-                { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
-                { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
+                {typeof(ValidationException), HandleValidationException},
+                {typeof(NotFoundException), HandleNotFoundException},
+                {typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException},
+                {typeof(ForbiddenAccessException), HandleForbiddenAccessException}
             };
         }
 
@@ -33,7 +32,7 @@ namespace GreenFlux.WebUI.Filters
 
         private void HandleException(ExceptionContext context)
         {
-            Type type = context.Exception.GetType();
+            var type = context.Exception.GetType();
             if (_exceptionHandlers.ContainsKey(type))
             {
                 _exceptionHandlers[type].Invoke(context);
@@ -79,7 +78,7 @@ namespace GreenFlux.WebUI.Filters
         {
             var exception = context.Exception as NotFoundException;
 
-            var details = new ProblemDetails()
+            var details = new ProblemDetails
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
                 Title = "The specified resource was not found.",

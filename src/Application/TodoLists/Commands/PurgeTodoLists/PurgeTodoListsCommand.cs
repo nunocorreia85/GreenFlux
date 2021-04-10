@@ -1,8 +1,8 @@
-﻿using GreenFlux.Application.Common.Interfaces;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Application.Common.Security;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Application.TodoLists.Commands.PurgeTodoLists
 {

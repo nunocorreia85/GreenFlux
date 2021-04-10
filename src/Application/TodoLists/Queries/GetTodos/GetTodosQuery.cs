@@ -1,14 +1,13 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using GreenFlux.Application.Common.Interfaces;
-using GreenFlux.Application.Common.Security;
-using GreenFlux.Domain.Enums;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using GreenFlux.Application.Common.Interfaces;
+using GreenFlux.Domain.Enums;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace GreenFlux.Application.TodoLists.Queries.GetTodos
 {
@@ -29,11 +28,11 @@ namespace GreenFlux.Application.TodoLists.Queries.GetTodos
 
         public async Task<TodosVm> Handle(GetTodosQuery request, CancellationToken cancellationToken)
         {
-            return new TodosVm
+            return new()
             {
                 PriorityLevels = Enum.GetValues(typeof(PriorityLevel))
                     .Cast<PriorityLevel>()
-                    .Select(p => new PriorityLevelDto { Value = (int)p, Name = p.ToString() })
+                    .Select(p => new PriorityLevelDto {Value = (int) p, Name = p.ToString()})
                     .ToList(),
 
                 Lists = await _context.TodoLists

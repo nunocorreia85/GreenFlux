@@ -1,10 +1,10 @@
-﻿using GreenFlux.Application.Common.Interfaces;
+﻿using System;
+using System.Threading.Tasks;
+using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Application.Common.Models;
 using GreenFlux.Domain.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
 
 namespace GreenFlux.Infrastructure.Services
 {
@@ -27,7 +27,7 @@ namespace GreenFlux.Infrastructure.Services
 
         private INotification GetNotificationCorrespondingToDomainEvent(DomainEvent domainEvent)
         {
-            return (INotification)Activator.CreateInstance(
+            return (INotification) Activator.CreateInstance(
                 typeof(DomainEventNotification<>).MakeGenericType(domainEvent.GetType()), domainEvent);
         }
     }
