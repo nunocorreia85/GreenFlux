@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 namespace GreenFlux.Application.ChargeStations.EventHandlers
 {
     public class
-        ChargeStationDeletedEventHandler : INotificationHandler<DomainEventNotification<ChargeStationDeletedEvent>>
+        ChargeStationDeletedEventHandler : INotificationHandler<DomainEventNotification<ChargeStationRemovedEvent>>
     {
         private readonly ILogger<ChargeStationDeletedEventHandler> _logger;
 
@@ -17,7 +17,7 @@ namespace GreenFlux.Application.ChargeStations.EventHandlers
             _logger = logger;
         }
 
-        public Task Handle(DomainEventNotification<ChargeStationDeletedEvent> notification,
+        public Task Handle(DomainEventNotification<ChargeStationRemovedEvent> notification,
             CancellationToken cancellationToken)
         {
             var domainEvent = notification.DomainEvent;

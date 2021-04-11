@@ -19,7 +19,7 @@ namespace GreenFlux.Api.Filters
                 {typeof(ValidationException), HandleValidationException},
                 {typeof(NotFoundException), HandleNotFoundException},
                 {typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException},
-                {typeof(ForbiddenAccessException), HandleForbiddenAccessException}
+                {typeof(AddConnectorException), HandleAddConnectorException}
             };
         }
 
@@ -52,7 +52,7 @@ namespace GreenFlux.Api.Filters
         {
             var exception = context.Exception as ValidationException;
 
-            var details = new ValidationProblemDetails(exception.Errors)
+            var details = new ValidationProblemDetails(exception?.Errors)
             {
                 Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
             };
@@ -107,18 +107,21 @@ namespace GreenFlux.Api.Filters
             context.ExceptionHandled = true;
         }
 
-        private void HandleForbiddenAccessException(ExceptionContext context)
+        private void HandleAddConnectorException(ExceptionContext context)
         {
+            var exception = context.Exception as NotFoundException;
+            
             var details = new ProblemDetails
             {
-                Status = StatusCodes.Status403Forbidden,
-                Title = "Forbidden",
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3"
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "Application Error",
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.3",
+                Detail = exception?.Message
             };
 
             context.Result = new ObjectResult(details)
             {
-                StatusCode = StatusCodes.Status403Forbidden
+                StatusCode = StatusCodes.Status500InternalServerError
             };
 
             context.ExceptionHandled = true;

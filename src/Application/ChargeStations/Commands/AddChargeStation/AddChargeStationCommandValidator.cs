@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace GreenFlux.Application.ChargeStations.Commands.CreateChargeStation
+namespace GreenFlux.Application.ChargeStations.Commands.AddChargeStation
 {
-    public class CreateChargeStationCommandValidator : AbstractValidator<CreateChargeStationCommand>
+    public class AddChargeStationCommandValidator : AbstractValidator<AddChargeStationCommand>
     {
-        public CreateChargeStationCommandValidator()
+        public AddChargeStationCommandValidator()
         {
             RuleFor(v => v.Connectors)
                 .NotEmpty();

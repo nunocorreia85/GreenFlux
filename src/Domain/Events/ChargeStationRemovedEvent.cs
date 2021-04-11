@@ -3,9 +3,9 @@ using GreenFlux.Domain.Entities;
 
 namespace GreenFlux.Domain.Events
 {
-    public class ChargeStationDeletedEvent : DomainEvent
+    public class ChargeStationRemovedEvent : DomainEvent
     {
-        public ChargeStationDeletedEvent(ChargeStation chargeStation)
+        public ChargeStationRemovedEvent(ChargeStation chargeStation)
         {
             ChargeStation = chargeStation;
         }

@@ -64,11 +64,6 @@ namespace GreenFlux.Infrastructure.Persistence
             base.OnModelCreating(builder);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.LogTo(s => _logger.LogDebug(s));
-        }
-
         private async Task DispatchEvents()
         {
             while (true)

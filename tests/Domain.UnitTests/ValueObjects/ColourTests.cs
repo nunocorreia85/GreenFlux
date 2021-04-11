@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GreenFlux.Domain.Exceptions;
-using GreenFlux.Domain.ValueObjects;
 using NUnit.Framework;
 
 namespace GreenFlux.Domain.UnitTests.ValueObjects

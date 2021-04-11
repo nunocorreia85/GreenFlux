@@ -20,9 +20,12 @@
 
   <ItemGroup>
     <Folder Include="ChargeStations\Queries" />
-    <Folder Include="Connectors\Commands" />
     <Folder Include="Connectors\EventHandlers" />
     <Folder Include="Connectors\Queries" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Groups\Commands\DeleteGroup\DeleteGroupCommandHandler.cs" />
   </ItemGroup>
 
 </Project>

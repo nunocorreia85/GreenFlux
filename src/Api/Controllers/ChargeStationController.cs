@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using GreenFlux.Application.ChargeStations.Commands.CreateChargeStation;
-using GreenFlux.Application.ChargeStations.Commands.DeleteChargeStation;
+using GreenFlux.Application.ChargeStations.Commands.AddChargeStation;
+using GreenFlux.Application.ChargeStations.Commands.RemoveChargeStation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GreenFlux.Api.Controllers
@@ -8,7 +8,7 @@ namespace GreenFlux.Api.Controllers
     public class ChargeStationController : ApiControllerBase
     {
         [HttpPost]
-        public async Task<ActionResult<long>> Create(CreateChargeStationCommand command)
+        public async Task<ActionResult<long>> Create(AddChargeStationCommand command)
         {
             return await Mediator.Send(command);
         }
@@ -16,7 +16,7 @@ namespace GreenFlux.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteChargeStationCommand() {Id = id});
+            await Mediator.Send(new RemoveChargeStationCommand() {Id = id});
 
             return NoContent();
         }

@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using GreenFlux.Application.Common.Models;
+using GreenFlux.Application.Dto;
 using GreenFlux.Application.Groups.Commands.CreateGroup;
 using GreenFlux.Application.Groups.Commands.DeleteGroup;
 using GreenFlux.Application.Groups.Queries.GetGroupsWithPagination;
-using GreenFlux.Application.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GreenFlux.Api.Controllers
