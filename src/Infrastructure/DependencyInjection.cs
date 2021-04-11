@@ -1,5 +1,4 @@
 ﻿using GreenFlux.Application.Common.Interfaces;
-using GreenFlux.Infrastructure.Files;
 using GreenFlux.Infrastructure.Persistence;
 using GreenFlux.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +26,6 @@ namespace GreenFlux.Infrastructure
             services.AddScoped<IDomainEventService, DomainEventService>();
 
             services.AddTransient<IDateTime, DateTimeService>();
-            services.AddTransient<ICsvFileBuilder, CsvFileBuilder>();
 
             return services;
         }

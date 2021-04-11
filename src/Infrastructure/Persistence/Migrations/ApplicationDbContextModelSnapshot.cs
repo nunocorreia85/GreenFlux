@@ -19,7 +19,7 @@ namespace GreenFlux.Infrastructure.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.Entity("GreenFlux.Domain.Entities.TodoItem", b =>
+            modelBuilder.Entity("GreenFlux.Domain.Entities.Group", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,7 +53,7 @@ namespace GreenFlux.Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("Reminder")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -62,10 +62,10 @@ namespace GreenFlux.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("ListId");
 
-                    b.ToTable("TodoItems");
+                    b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("GreenFlux.Domain.Entities.TodoList", b =>
+            modelBuilder.Entity("GreenFlux.Domain.Entities.ChargeStation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,14 +84,14 @@ namespace GreenFlux.Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Title")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TodoLists");
+                    b.ToTable("ChargeStations");
                 });
 
             modelBuilder.Entity("GreenFlux.Infrastructure.Identity.ApplicationUser", b =>
@@ -397,9 +397,9 @@ namespace GreenFlux.Infrastructure.Persistence.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("GreenFlux.Domain.Entities.TodoItem", b =>
+            modelBuilder.Entity("GreenFlux.Domain.Entities.Group", b =>
                 {
-                    b.HasOne("GreenFlux.Domain.Entities.TodoList", "List")
+                    b.HasOne("GreenFlux.Domain.Entities.ChargeStation", "List")
                         .WithMany("Items")
                         .HasForeignKey("ListId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -408,11 +408,11 @@ namespace GreenFlux.Infrastructure.Persistence.Migrations
                     b.Navigation("List");
                 });
 
-            modelBuilder.Entity("GreenFlux.Domain.Entities.TodoList", b =>
+            modelBuilder.Entity("GreenFlux.Domain.Entities.ChargeStation", b =>
                 {
                     b.OwnsOne("GreenFlux.Domain.ValueObjects.Colour", "Colour", b1 =>
                         {
-                            b1.Property<int>("TodoListId")
+                            b1.Property<int>("ChargeStationId")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("int")
                                 .UseIdentityColumn();
@@ -420,12 +420,12 @@ namespace GreenFlux.Infrastructure.Persistence.Migrations
                             b1.Property<string>("Code")
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.HasKey("TodoListId");
+                            b1.HasKey("ChargeStationId");
 
-                            b1.ToTable("TodoLists");
+                            b1.ToTable("ChargeStations");
 
                             b1.WithOwner()
-                                .HasForeignKey("TodoListId");
+                                .HasForeignKey("ChargeStationId");
                         });
 
                     b.Navigation("Colour");
@@ -482,7 +482,7 @@ namespace GreenFlux.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GreenFlux.Domain.Entities.TodoList", b =>
+            modelBuilder.Entity("GreenFlux.Domain.Entities.ChargeStation", b =>
                 {
                     b.Navigation("Items");
                 });

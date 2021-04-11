@@ -3,21 +3,21 @@ using System.Globalization;
 using System.IO;
 using CsvHelper;
 using GreenFlux.Application.Common.Interfaces;
-using GreenFlux.Application.TodoLists.Queries.ExportTodos;
+using GreenFlux.Application.ChargeStations.Queries.ExportTodos;
 using GreenFlux.Infrastructure.Files.Maps;
 
 namespace GreenFlux.Infrastructure.Files
 {
     public class CsvFileBuilder : ICsvFileBuilder
     {
-        public byte[] BuildTodoItemsFile(IEnumerable<TodoItemRecord> records)
+        public byte[] BuildGroupsFile(IEnumerable<GroupRecord> records)
         {
             using var memoryStream = new MemoryStream();
             using (var streamWriter = new StreamWriter(memoryStream))
             {
                 using var csvWriter = new CsvWriter(streamWriter, CultureInfo.InvariantCulture);
 
-                csvWriter.Configuration.RegisterClassMap<TodoItemRecordMap>();
+                csvWriter.Configuration.RegisterClassMap<GroupRecordMap>();
                 csvWriter.WriteRecords(records);
             }
 

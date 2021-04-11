@@ -7,9 +7,11 @@ namespace GreenFlux.Application.Common.Interfaces
 {
     public interface IApplicationDbContext
     {
-        DbSet<TodoList> TodoLists { get; set; }
+        DbSet<ChargeStation> ChargeStations { get; set; }
 
-        DbSet<TodoItem> TodoItems { get; set; }
+        DbSet<Group> Groups { get; set; }
+
+        DbSet<Connector> Connectors { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

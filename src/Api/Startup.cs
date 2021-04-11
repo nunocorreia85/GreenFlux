@@ -1,3 +1,5 @@
+using FluentValidation.AspNetCore;
+using GreenFlux.Api.Filters;
 using GreenFlux.Application;
 using GreenFlux.Infrastructure;
 using GreenFlux.Infrastructure.Persistence;
@@ -32,6 +34,10 @@ namespace GreenFlux.Api
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>();
 
+            services.AddControllersWithViews(options =>
+                    options.Filters.Add<ApiExceptionFilterAttribute>())
+                .AddFluentValidation();
+            
             // Customise default API behaviour
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 

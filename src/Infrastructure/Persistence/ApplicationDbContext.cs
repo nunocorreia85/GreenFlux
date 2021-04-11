@@ -7,6 +7,7 @@ using GreenFlux.Domain.Common;
 using GreenFlux.Domain.Entities;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace GreenFlux.Infrastructure.Persistence
@@ -15,20 +16,25 @@ namespace GreenFlux.Infrastructure.Persistence
     {
         private readonly IDateTime _dateTime;
         private readonly IDomainEventService _domainEventService;
+        private readonly ILogger<ApplicationDbContext> _logger;
 
         public ApplicationDbContext(
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions,
             IDomainEventService domainEventService,
-            IDateTime dateTime) : base(options)
+            IDateTime dateTime,
+            ILogger<ApplicationDbContext> logger) : base(options)
         {
             _domainEventService = domainEventService;
             _dateTime = dateTime;
+            _logger = logger;
         }
 
-        public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
-        public DbSet<TodoList> TodoLists { get; set; }
+        public DbSet<ChargeStation> ChargeStations { get; set; }
+
+        public DbSet<Connector> Connectors { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {
@@ -56,6 +62,11 @@ namespace GreenFlux.Infrastructure.Persistence
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(builder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.LogTo(s => _logger.LogDebug(s));
         }
 
         private async Task DispatchEvents()
