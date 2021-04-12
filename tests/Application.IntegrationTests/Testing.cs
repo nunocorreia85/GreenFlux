@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using GreenFlux.Api;
 using GreenFlux.Infrastructure.Persistence;
@@ -84,7 +85,7 @@ namespace GreenFlux.Application.IntegrationTests
 
             return await context.FindAsync<TEntity>(keyValues);
         }
-
+        
         public static async Task AddAsync<TEntity>(TEntity entity)
             where TEntity : class
         {
