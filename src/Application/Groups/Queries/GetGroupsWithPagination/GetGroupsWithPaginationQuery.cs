@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,6 +8,7 @@ using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Application.Common.Mappings;
 using GreenFlux.Application.Common.Models;
 using GreenFlux.Application.Dto;
+using GreenFlux.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +21,7 @@ namespace GreenFlux.Application.Groups.Queries.GetGroupsWithPagination
         public long? ChargeStationId { get; set; }
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
-        
+
         public class GetGroupsWithPaginationQueryHandler :
             IRequestHandler<GetGroupsWithPaginationQuery, PaginatedList<GroupDto>>
         {
@@ -37,18 +39,13 @@ namespace GreenFlux.Application.Groups.Queries.GetGroupsWithPagination
             {
                 var query = _context.Groups
                     .Include(g => g.ChargeStations)
-                    .ThenInclude(s => s.Connectors)
+                    .ThenInclude<Group, ChargeStation, List<Connector>>(s => s.Connectors)
                     .AsQueryable();
-            
-                if (request.Id.HasValue)
-                {
-                    query = query.Where(x => x.Id == request.Id);
-                }
-            
+
+                if (request.Id.HasValue) query = query.Where(x => x.Id == request.Id);
+
                 if (request.ChargeStationId.HasValue)
-                {
                     query = query.Where(x => x.ChargeStations.Any(s => s.Id == request.ChargeStationId));
-                }
 
                 return await query
                     .OrderBy(x => x.Id)

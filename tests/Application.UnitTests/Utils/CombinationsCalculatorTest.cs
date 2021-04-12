@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using GreenFlux.Application.Utils;
 using GreenFlux.Domain.Entities;
@@ -16,15 +15,15 @@ namespace GreenFlux.Application.UnitTests.Utils
         [TestCase(5f, 0)]
         public void ShouldGetAllPossibleCombinationsOfConnectors(float targetCurrent, int expectedNumberOfCombinations)
         {
-            var connectorsList = CombinationsCalculator.GetCombinations(new List<Connector>()
+            var connectorsList = CombinationsCalculator.GetCombinations(new List<Connector>
             {
-                new() { MaxCurrent = 44, ChargeStationId = 1},
-                new() { MaxCurrent = 10, ChargeStationId = 1},
-                new() { MaxCurrent = 8.9f, ChargeStationId = 2},
-                new() { MaxCurrent = 1.1f, ChargeStationId = 2},
-                new() { MaxCurrent = 20, ChargeStationId = 3},
-                new() { MaxCurrent = 30, ChargeStationId = 3},
-                new() { MaxCurrent = 10, ChargeStationId = 4},
+                new() {MaxCurrent = 44, ChargeStationId = 1},
+                new() {MaxCurrent = 10, ChargeStationId = 1},
+                new() {MaxCurrent = 8.9f, ChargeStationId = 2},
+                new() {MaxCurrent = 1.1f, ChargeStationId = 2},
+                new() {MaxCurrent = 20, ChargeStationId = 3},
+                new() {MaxCurrent = 30, ChargeStationId = 3},
+                new() {MaxCurrent = 10, ChargeStationId = 4}
             }, targetCurrent);
 
             connectorsList.Count.Should().Be(expectedNumberOfCombinations);

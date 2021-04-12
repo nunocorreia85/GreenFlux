@@ -21,41 +21,42 @@ namespace GreenFlux.Application.Connectors.Commands.AddConnector
             _context = context;
         }
 
-        public async Task<AddConnectorResponseDto> Handle(AddConnectorCommand request, CancellationToken cancellationToken)
+        public async Task<AddConnectorResponseDto> Handle(AddConnectorCommand request,
+            CancellationToken cancellationToken)
         {
             var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == request.GroupId, cancellationToken);
-            
-            if(group == null) throw new NotFoundException(nameof(Group), request.GroupId);
+
+            if (group == null) throw new NotFoundException(nameof(Group), request.GroupId);
 
             var connectors = await _context.ChargeStations
                 .Where(station => station.GroupId == request.GroupId)
                 .SelectMany(station => station.Connectors)
                 .ToListAsync(cancellationToken);
-            
+
             var capacityUsed = connectors.Sum(arg => arg.MaxCurrent);
 
             //if exceeds capacity
-            if ((capacityUsed + request.MaxCurrent) > group.Capacity)
+            if (capacityUsed + request.MaxCurrent > group.Capacity)
             {
                 var combinations = CombinationsCalculator.GetCombinations(connectors, request.MaxCurrent);
-                return new AddConnectorResponseDto()
+                return new AddConnectorResponseDto
                 {
                     Suggestions = GetConnectorsToBeRemove(combinations)
                 };
             }
 
             //if can add new connector
-            var connector = new Connector()
+            var connector = new Connector
             {
                 ChargeStationId = request.ChargeStationId,
                 MaxCurrent = request.MaxCurrent,
                 Id = GetConnectorAvailableId(request, connectors)
             };
-            
+
             _context.Connectors.Add(connector);
             await _context.SaveChangesAsync(cancellationToken);
-            
-            return new AddConnectorResponseDto()
+
+            return new AddConnectorResponseDto
             {
                 AddedConnectorId = connector.Id
             };
@@ -63,9 +64,9 @@ namespace GreenFlux.Application.Connectors.Commands.AddConnector
 
         private static List<SuggestionDto> GetConnectorsToBeRemove(IEnumerable<Connector[]> combinations)
         {
-            return combinations.Select(lst => new SuggestionDto()
+            return combinations.Select(lst => new SuggestionDto
             {
-                ConnectorsToRemove = lst.Select(c => new ConnectorDto()
+                ConnectorsToRemove = lst.Select(c => new ConnectorDto
                 {
                     ConnectorId = c.Id,
                     MaxCurrent = c.MaxCurrent,
@@ -81,13 +82,11 @@ namespace GreenFlux.Application.Connectors.Commands.AddConnector
             {
                 if (connectors.Any(connectorDto =>
                     connectorDto.ChargeStationId == request.ChargeStationId && connectorDto.Id == i))
-                {
                     continue;
-                }
                 return i;
             }
+
             throw new AddConnectorException("Failed to get a new connector id.");
         }
-
     }
 }

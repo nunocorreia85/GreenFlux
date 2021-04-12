@@ -8,8 +8,8 @@ namespace GreenFlux.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Connector> builder)
         {
-            builder.HasKey(c => new {c.Id, c.ChargeStationId });
-            
+            builder.HasKey(c => new {c.Id, c.ChargeStationId});
+
             builder.Property(t => t.Id)
                 .ValueGeneratedNever()
                 .IsRequired();

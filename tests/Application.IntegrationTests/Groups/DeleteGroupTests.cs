@@ -13,7 +13,7 @@ namespace GreenFlux.Application.IntegrationTests.Groups
         [Test]
         public void ShouldRequireValidGroupId()
         {
-            var command = new DeleteGroupCommand { Id = 99 };
+            var command = new DeleteGroupCommand {Id = 99};
 
             FluentActions.Invoking(() =>
                 Testing.SendAsync(command)).Should().Throw<NotFoundException>();
@@ -22,7 +22,7 @@ namespace GreenFlux.Application.IntegrationTests.Groups
         [Test]
         public async Task ShouldDeleteGroup()
         {
-            var command = new CreateGroupCommand()
+            var command = new CreateGroupCommand
             {
                 Capacity = 100,
                 Name = "Amstedam"
@@ -30,10 +30,10 @@ namespace GreenFlux.Application.IntegrationTests.Groups
 
             var id = await Testing.SendAsync(command);
             var list = await Testing.FindAsync<Group>(id);
-            
-            await Testing.SendAsync(new DeleteGroupCommand 
-            { 
-                Id = id 
+
+            await Testing.SendAsync(new DeleteGroupCommand
+            {
+                Id = id
             });
 
             list = await Testing.FindAsync<Group>(id);

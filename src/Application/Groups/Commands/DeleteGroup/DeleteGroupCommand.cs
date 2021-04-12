@@ -13,7 +13,7 @@ namespace GreenFlux.Application.Groups.Commands.DeleteGroup
     public class DeleteGroupCommand : IRequest
     {
         public long Id { get; set; }
-        
+
         public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand>
         {
             private readonly IApplicationDbContext _context;

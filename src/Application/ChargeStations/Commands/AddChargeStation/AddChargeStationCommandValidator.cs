@@ -8,7 +8,7 @@ namespace GreenFlux.Application.ChargeStations.Commands.AddChargeStation
         {
             RuleFor(v => v.ConnectorMaxCurrent)
                 .Must(maxCurrent => maxCurrent > 0)
-                    .WithMessage("Max current value should be greater than zero");
+                .WithMessage("Max current value should be greater than zero");
         }
     }
 }

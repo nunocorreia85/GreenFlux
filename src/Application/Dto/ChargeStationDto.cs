@@ -15,7 +15,7 @@ namespace GreenFlux.Application.Dto
         public void Mapping(Profile profile)
         {
             profile.CreateMap<ChargeStation, ChargeStationDto>()
-                .ForMember(d => d.ChargeStationId, 
+                .ForMember(d => d.ChargeStationId,
                     opt => opt.MapFrom(s => s.Id));
         }
     }

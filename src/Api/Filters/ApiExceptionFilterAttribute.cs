@@ -110,7 +110,7 @@ namespace GreenFlux.Api.Filters
         private void HandleAddConnectorException(ExceptionContext context)
         {
             var exception = context.Exception as NotFoundException;
-            
+
             var details = new ProblemDetails
             {
                 Status = StatusCodes.Status500InternalServerError,

@@ -13,7 +13,7 @@ namespace GreenFlux.Application.ChargeStations.Commands.RemoveChargeStation
     public class RemoveChargeStationCommand : IRequest
     {
         public long Id { get; set; }
-        
+
         public class RemoveChargeStationCommandHandler : IRequestHandler<RemoveChargeStationCommand>
         {
             private readonly IApplicationDbContext _context;
@@ -43,7 +43,7 @@ namespace GreenFlux.Application.ChargeStations.Commands.RemoveChargeStation
                 }));
 
                 chargeStation.DomainEvents.Add(new ChargeStationRemovedEvent(chargeStation));
-                
+
                 _context.ChargeStations.Remove(chargeStation);
                 await _context.SaveChangesAsync(cancellationToken);
                 return Unit.Value;

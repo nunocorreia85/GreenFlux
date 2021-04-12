@@ -15,10 +15,7 @@ namespace GreenFlux.Application.UnitTests.Common.Mappings
 
         public MappingTests()
         {
-            _configuration = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<MappingProfile>();
-            });
+            _configuration = new MapperConfiguration(cfg => { cfg.AddProfile<MappingProfile>(); });
 
             _mapper = _configuration.CreateMapper();
         }
@@ -28,7 +25,7 @@ namespace GreenFlux.Application.UnitTests.Common.Mappings
         {
             _configuration.AssertConfigurationIsValid();
         }
-        
+
         [Test]
         [TestCase(typeof(Group), typeof(GroupDto))]
         [TestCase(typeof(ChargeStation), typeof(ChargeStationDto))]

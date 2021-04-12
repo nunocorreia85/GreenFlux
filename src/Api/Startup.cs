@@ -37,7 +37,7 @@ namespace GreenFlux.Api
             services.AddControllersWithViews(options =>
                     options.Filters.Add<ApiExceptionFilterAttribute>())
                 .AddFluentValidation();
-            
+
             // Customise default API behaviour
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 

@@ -25,7 +25,8 @@ namespace GreenFlux.Application.Connectors.Commands.RemoveConnector
             public async Task<Unit> Handle(RemoveConnectorCommand request, CancellationToken cancellationToken)
             {
                 var connector = await _context.Connectors
-                    .FirstOrDefaultAsync(s => s.Id == request.ConnectorId && s.ChargeStationId == request.ChargeStationId,
+                    .FirstOrDefaultAsync(
+                        s => s.Id == request.ConnectorId && s.ChargeStationId == request.ChargeStationId,
                         cancellationToken);
 
                 if (connector == null) throw new NotFoundException(nameof(connector), request.ConnectorId);

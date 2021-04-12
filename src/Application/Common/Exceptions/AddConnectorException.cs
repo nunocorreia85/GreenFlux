@@ -4,7 +4,7 @@ namespace GreenFlux.Application.Common.Exceptions
 {
     public class AddConnectorException : Exception
     {
-        public AddConnectorException(string message) : base(message) 
+        public AddConnectorException(string message) : base(message)
         {
         }
     }

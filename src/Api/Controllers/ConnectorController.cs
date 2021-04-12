@@ -13,11 +13,12 @@ namespace GreenFlux.Api.Controllers
         {
             return await Mediator.Send(command);
         }
-        
+
         [HttpDelete("{chargeStationId}/{connectorId}")]
         public async Task<ActionResult> Remove(long chargeStationId, int connectorId)
         {
-            await Mediator.Send(new RemoveConnectorCommand() {ChargeStationId = chargeStationId, ConnectorId = connectorId});
+            await Mediator.Send(new RemoveConnectorCommand
+                {ChargeStationId = chargeStationId, ConnectorId = connectorId});
 
             return NoContent();
         }

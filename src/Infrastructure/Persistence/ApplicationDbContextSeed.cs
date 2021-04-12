@@ -16,17 +16,17 @@ namespace GreenFlux.Infrastructure.Persistence
                 {
                     Capacity = 100,
                     Name = "Nieuw-Vennep",
-                    ChargeStations = new List<ChargeStation>()
+                    ChargeStations = new List<ChargeStation>
                     {
                         new()
                         {
                             Name = "A1",
-                            Connectors = new List<Connector>()
+                            Connectors = new List<Connector>
                             {
                                 new()
                                 {
                                     Id = 1,
-                                    MaxCurrent = 10,
+                                    MaxCurrent = 10
                                 },
                                 new()
                                 {
@@ -38,7 +38,7 @@ namespace GreenFlux.Infrastructure.Persistence
                         new()
                         {
                             Name = "A2",
-                            Connectors = new List<Connector>()
+                            Connectors = new List<Connector>
                             {
                                 new()
                                 {
@@ -47,10 +47,9 @@ namespace GreenFlux.Infrastructure.Persistence
                                 }
                             }
                         }
-                        
                     }
                 });
-                
+
                 await context.SaveChangesAsync();
             }
         }

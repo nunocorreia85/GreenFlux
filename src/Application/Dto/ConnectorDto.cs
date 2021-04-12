@@ -9,11 +9,11 @@ namespace GreenFlux.Application.Dto
         public int ConnectorId { get; set; }
         public float MaxCurrent { get; set; }
         public long ChargeStationId { get; set; }
-        
+
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Connector, ConnectorDto>()
-                .ForMember(d => d.ConnectorId, 
+                .ForMember(d => d.ConnectorId,
                     opt => opt.MapFrom(s => s.Id));
         }
     }

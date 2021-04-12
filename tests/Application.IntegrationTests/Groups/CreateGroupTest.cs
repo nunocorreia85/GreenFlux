@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
+using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.Groups.Commands.CreateGroup;
 using GreenFlux.Domain.Entities;
-using GreenFlux.Application.Common.Exceptions;
 using NUnit.Framework;
 
 namespace GreenFlux.Application.IntegrationTests.Groups
@@ -14,7 +14,7 @@ namespace GreenFlux.Application.IntegrationTests.Groups
         [Test]
         public void ShouldRequireMinimumFields()
         {
-            var command = new CreateGroupCommand()
+            var command = new CreateGroupCommand
             {
                 Capacity = 0
             };
@@ -22,11 +22,11 @@ namespace GreenFlux.Application.IntegrationTests.Groups
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().Throw<ValidationException>();
         }
-        
+
         [Test]
         public async Task ShouldCreateGroup()
         {
-            var command = new CreateGroupCommand()
+            var command = new CreateGroupCommand
             {
                 Capacity = 100,
                 Name = "Amstedam"

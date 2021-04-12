@@ -13,7 +13,7 @@ namespace GreenFlux.Application.ChargeStations.Commands.AddChargeStation
         public string Name { get; set; }
 
         public float ConnectorMaxCurrent { get; set; }
-        
+
         public class AddChargeStationCommandHandler : IRequestHandler<AddChargeStationCommand, long>
         {
             private readonly IApplicationDbContext _context;
@@ -29,7 +29,7 @@ namespace GreenFlux.Application.ChargeStations.Commands.AddChargeStation
                 {
                     Name = request.Name,
                     GroupId = request.GroupId,
-                    Connectors = new List<Connector>()
+                    Connectors = new List<Connector>
                     {
                         new()
                         {
@@ -40,7 +40,7 @@ namespace GreenFlux.Application.ChargeStations.Commands.AddChargeStation
                 };
 
                 _context.ChargeStations.Add(chargeStation);
-            
+
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return chargeStation.Id;
