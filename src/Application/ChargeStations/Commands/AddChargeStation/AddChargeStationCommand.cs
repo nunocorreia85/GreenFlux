@@ -13,38 +13,38 @@ namespace GreenFlux.Application.ChargeStations.Commands.AddChargeStation
         public string Name { get; set; }
 
         public float ConnectorMaxCurrent { get; set; }
+    }
+    
+    public class AddChargeStationCommandHandler : IRequestHandler<AddChargeStationCommand, long>
+    {
+        private readonly IApplicationDbContext _context;
 
-        public class AddChargeStationCommandHandler : IRequestHandler<AddChargeStationCommand, long>
+        public AddChargeStationCommandHandler(IApplicationDbContext context)
         {
-            private readonly IApplicationDbContext _context;
+            _context = context;
+        }
 
-            public AddChargeStationCommandHandler(IApplicationDbContext context)
+        public async Task<long> Handle(AddChargeStationCommand request, CancellationToken cancellationToken)
+        {
+            var chargeStation = new ChargeStation
             {
-                _context = context;
-            }
-
-            public async Task<long> Handle(AddChargeStationCommand request, CancellationToken cancellationToken)
-            {
-                var chargeStation = new ChargeStation
+                Name = request.Name,
+                GroupId = request.GroupId,
+                Connectors = new List<Connector>
                 {
-                    Name = request.Name,
-                    GroupId = request.GroupId,
-                    Connectors = new List<Connector>
+                    new()
                     {
-                        new()
-                        {
-                            Id = 1,
-                            MaxCurrent = request.ConnectorMaxCurrent
-                        }
+                        Id = 1,
+                        MaxCurrent = request.ConnectorMaxCurrent
                     }
-                };
+                }
+            };
 
-                _context.ChargeStations.Add(chargeStation);
+            _context.ChargeStations.Add(chargeStation);
 
-                await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
-                return chargeStation.Id;
-            }
+            return chargeStation.Id;
         }
     }
 }

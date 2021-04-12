@@ -13,50 +13,50 @@ namespace GreenFlux.Application.Groups.Commands.DeleteGroup
     public class DeleteGroupCommand : IRequest
     {
         public long Id { get; set; }
+    }
+    
+    public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand>
+    {
+        private readonly IApplicationDbContext _context;
 
-        public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand>
+        public DeleteGroupCommandHandler(IApplicationDbContext context)
         {
-            private readonly IApplicationDbContext _context;
+            _context = context;
+        }
 
-            public DeleteGroupCommandHandler(IApplicationDbContext context)
+        public async Task<Unit> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
+        {
+            var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == request.Id, cancellationToken);
+
+            if (group == null) throw new NotFoundException(nameof(Group), request.Id);
+
+            var chargeStationIds = await _context.ChargeStations
+                .Where(c => c.Id == request.Id)
+                .Select(c => c.Id)
+                .ToListAsync(cancellationToken);
+
+            var connectorIds = await _context.Connectors
+                .Where(c => chargeStationIds.Contains(c.Id))
+                .Select(c => c.Id)
+                .ToListAsync(cancellationToken);
+
+            _context.Connectors.RemoveRange(connectorIds.Select(i => new Connector
             {
-                _context = context;
-            }
+                Id = i
+            }));
 
-            public async Task<Unit> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
+            _context.ChargeStations.RemoveRange(chargeStationIds.Select(i => new ChargeStation
             {
-                var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == request.Id, cancellationToken);
+                Id = i
+            }));
 
-                if (group == null) throw new NotFoundException(nameof(Group), request.Id);
+            _context.Groups.Remove(group);
 
-                var chargeStationIds = await _context.ChargeStations
-                    .Where(c => c.Id == request.Id)
-                    .Select(c => c.Id)
-                    .ToListAsync(cancellationToken);
+            group.DomainEvents.Add(new GroupDeletedEvent(group));
 
-                var connectorIds = await _context.Connectors
-                    .Where(c => chargeStationIds.Contains(c.Id))
-                    .Select(c => c.Id)
-                    .ToListAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
-                _context.Connectors.RemoveRange(connectorIds.Select(i => new Connector
-                {
-                    Id = i
-                }));
-
-                _context.ChargeStations.RemoveRange(chargeStationIds.Select(i => new ChargeStation
-                {
-                    Id = i
-                }));
-
-                _context.Groups.Remove(group);
-
-                group.DomainEvents.Add(new GroupDeletedEvent(group));
-
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return Unit.Value;
-            }
+            return Unit.Value;
         }
     }
 }

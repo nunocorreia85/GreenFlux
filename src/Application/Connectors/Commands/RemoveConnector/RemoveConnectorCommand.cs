@@ -1,9 +1,18 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
+using FluentValidation.Results;
 using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.Common.Interfaces;
+using GreenFlux.Application.Connectors.Commands.Common;
+using GreenFlux.Domain.Entities;
+using GreenFlux.Domain.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using ValidationException = GreenFlux.Application.Common.Exceptions.ValidationException;
 
 namespace GreenFlux.Application.Connectors.Commands.RemoveConnector
 {
@@ -12,31 +21,38 @@ namespace GreenFlux.Application.Connectors.Commands.RemoveConnector
         public int ConnectorId { get; set; }
 
         public long ChargeStationId { get; set; }
+    }
+    
+    public class RemoveConnectorCommandHandler : ConnectorCommandHandlerBase, 
+        IRequestHandler<RemoveConnectorCommand>
+    {
+        public RemoveConnectorCommandHandler(IApplicationDbContext context) : base(context)
+        { }
 
-        public class RemoveConnectorCommandHandler : IRequestHandler<RemoveConnectorCommand>
+        public async Task<Unit> Handle(RemoveConnectorCommand request, CancellationToken cancellationToken)
         {
-            private readonly IApplicationDbContext _context;
+            var stationConnectorIds = await _context.Connectors
+                .Where(c => c.ChargeStationId == request.ChargeStationId)
+                .Select(c => c.Id)
+                .ToListAsync(cancellationToken);
+                
+            if(!stationConnectorIds.Contains(request.ConnectorId))
+                throw new NotFoundException(nameof(Connector), request.ConnectorId);
 
-            public RemoveConnectorCommandHandler(IApplicationDbContext context)
+            if (stationConnectorIds.Count() == 1)
             {
-                _context = context;
+                throw new EntityRemoveException("Charge station cannot exist without a connector");
             }
-
-            public async Task<Unit> Handle(RemoveConnectorCommand request, CancellationToken cancellationToken)
+            
+            _context.Connectors.Remove(new Connector
             {
-                var connector = await _context.Connectors
-                    .FirstOrDefaultAsync(
-                        s => s.Id == request.ConnectorId && s.ChargeStationId == request.ChargeStationId,
-                        cancellationToken);
+                Id = request.ConnectorId,
+                ChargeStationId = request.ChargeStationId
+            });
 
-                if (connector == null) throw new NotFoundException(nameof(connector), request.ConnectorId);
+            await _context.SaveChangesAsync(cancellationToken);
 
-                _context.Connectors.Remove(connector);
-
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return Unit.Value;
-            }
+            return Unit.Value;
         }
     }
 }

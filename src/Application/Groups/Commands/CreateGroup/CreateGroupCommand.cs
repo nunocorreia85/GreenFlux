@@ -10,30 +10,30 @@ namespace GreenFlux.Application.Groups.Commands.CreateGroup
     {
         public string Name { get; set; }
         public float Capacity { get; set; }
+    }
+    
+    public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, long>
+    {
+        private readonly IApplicationDbContext _context;
 
-        public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, long>
+        public CreateGroupCommandHandler(IApplicationDbContext context)
         {
-            private readonly IApplicationDbContext _context;
+            _context = context;
+        }
 
-            public CreateGroupCommandHandler(IApplicationDbContext context)
+        public async Task<long> Handle(CreateGroupCommand request, CancellationToken cancellationToken)
+        {
+            var entity = new Group
             {
-                _context = context;
-            }
+                Name = request.Name,
+                Capacity = request.Capacity
+            };
 
-            public async Task<long> Handle(CreateGroupCommand request, CancellationToken cancellationToken)
-            {
-                var entity = new Group
-                {
-                    Name = request.Name,
-                    Capacity = request.Capacity
-                };
+            _context.Groups.Add(entity);
 
-                _context.Groups.Add(entity);
+            await _context.SaveChangesAsync(cancellationToken);
 
-                await _context.SaveChangesAsync(cancellationToken);
-
-                return entity.Id;
-            }
+            return entity.Id;
         }
     }
 }

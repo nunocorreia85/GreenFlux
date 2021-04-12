@@ -8,6 +8,7 @@ using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Application.Common.Mappings;
 using GreenFlux.Application.Common.Models;
 using GreenFlux.Application.Dto;
+using GreenFlux.Application.Dto.Queries;
 using GreenFlux.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +17,7 @@ namespace GreenFlux.Application.Groups.Queries.GetGroupsWithPagination
 {
     public class GetGroupsWithPaginationQuery : IRequest<PaginatedList<GroupDto>>
     {
-        public long? Id { get; set; }
-
+        public long? GroupId { get; set; }
         public long? ChargeStationId { get; set; }
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
@@ -42,7 +42,7 @@ namespace GreenFlux.Application.Groups.Queries.GetGroupsWithPagination
                     .ThenInclude<Group, ChargeStation, List<Connector>>(s => s.Connectors)
                     .AsQueryable();
 
-                if (request.Id.HasValue) query = query.Where(x => x.Id == request.Id);
+                if (request.GroupId.HasValue) query = query.Where(x => x.Id == request.GroupId);
 
                 if (request.ChargeStationId.HasValue)
                     query = query.Where(x => x.ChargeStations.Any(s => s.Id == request.ChargeStationId));

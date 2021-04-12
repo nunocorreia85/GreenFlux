@@ -25,20 +25,20 @@ namespace GreenFlux.Application.IntegrationTests.Groups
             var command = new CreateGroupCommand
             {
                 Capacity = 100,
-                Name = "Amstedam"
+                Name = "G1"
             };
 
             var id = await Testing.SendAsync(command);
-            var list = await Testing.FindAsync<Group>(id);
+            var @group = await Testing.FindAsync<Group>(id);
 
             await Testing.SendAsync(new DeleteGroupCommand
             {
                 Id = id
             });
 
-            list = await Testing.FindAsync<Group>(id);
+            @group = await Testing.FindAsync<Group>(id);
 
-            list.Should().BeNull();
+            @group.Should().BeNull();
         }
     }
 }

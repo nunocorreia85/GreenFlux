@@ -2,9 +2,9 @@
 using GreenFlux.Application.Common.Mappings;
 using GreenFlux.Domain.Entities;
 
-namespace GreenFlux.Application.Dto
+namespace GreenFlux.Application.Dto.Queries
 {
-    public class GroupDto : IMapFrom<Group>
+    public class GroupDto : DtoBase, IMapFrom<Group>
     {
         public long Id { get; set; }
         public string Name { get; set; }

@@ -15,7 +15,7 @@ namespace GreenFlux.Application.IntegrationTests.ChargeStations
         [Test]
         public void ShouldRequireValidChargeStationId()
         {
-            var command = new RemoveChargeStationCommand {Id = 99};
+            var command = new RemoveChargeStationCommand { ChargeStationId = 99 };
 
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().Throw<NotFoundException>();
@@ -24,13 +24,7 @@ namespace GreenFlux.Application.IntegrationTests.ChargeStations
         [Test]
         public async Task ShouldRemoveChargeStation()
         {
-            var group = new Group
-            {
-                Capacity = 100,
-                Name = "G1"
-            };
-
-            await AddAsync(group);
+            var group = await AddGroupAsync();
 
             var chargeStation = new ChargeStation
             {
@@ -38,11 +32,7 @@ namespace GreenFlux.Application.IntegrationTests.ChargeStations
                 Name = "S1",
                 Connectors = new List<Connector>
                 {
-                    new()
-                    {
-                        Id = 1,
-                        MaxCurrent = 10
-                    }
+                    new() {Id = 1, MaxCurrent = 10}
                 }
             };
 
@@ -51,7 +41,7 @@ namespace GreenFlux.Application.IntegrationTests.ChargeStations
 
             await SendAsync(new RemoveChargeStationCommand
             {
-                Id = id
+                ChargeStationId = id
             });
 
             chargeStation = await FindAsync<ChargeStation>(id);

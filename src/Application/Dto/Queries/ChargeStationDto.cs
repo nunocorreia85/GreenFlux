@@ -3,9 +3,9 @@ using AutoMapper;
 using GreenFlux.Application.Common.Mappings;
 using GreenFlux.Domain.Entities;
 
-namespace GreenFlux.Application.Dto
+namespace GreenFlux.Application.Dto.Queries
 {
-    public class ChargeStationDto : IMapFrom<ChargeStation>
+    public class ChargeStationDto : DtoBase, IMapFrom<ChargeStation>
     {
         public long GroupId { get; set; }
         public long ChargeStationId { get; set; }

@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using AutoMapper;
 using GreenFlux.Application.Common.Mappings;
 using GreenFlux.Application.Dto;
+using GreenFlux.Application.Dto.Queries;
 using GreenFlux.Domain.Entities;
 using NUnit.Framework;
 
@@ -29,6 +30,7 @@ namespace GreenFlux.Application.UnitTests.Common.Mappings
         [Test]
         [TestCase(typeof(Group), typeof(GroupDto))]
         [TestCase(typeof(ChargeStation), typeof(ChargeStationDto))]
+        [TestCase(typeof(Connector), typeof(ConnectorDto))]
         public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
         {
             var instance = GetInstanceOf(source);
@@ -38,11 +40,10 @@ namespace GreenFlux.Application.UnitTests.Common.Mappings
 
         private object GetInstanceOf(Type type)
         {
-            if (type.GetConstructor(Type.EmptyTypes) != null)
-                return Activator.CreateInstance(type);
+            return type.GetConstructor(Type.EmptyTypes) != null ? 
+                Activator.CreateInstance(type) : FormatterServices.GetUninitializedObject(type);
 
             // Type without parameterless constructor
-            return FormatterServices.GetUninitializedObject(type);
         }
     }
 }

@@ -23,17 +23,11 @@ namespace GreenFlux.Application.IntegrationTests.ChargeStations
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().Throw<ValidationException>();
         }
-
+        
         [Test]
         public async Task ShouldCreateChargeStation()
         {
-            var group = new Group
-            {
-                Capacity = 100,
-                Name = "G1"
-            };
-
-            await AddAsync(group);
+            var group = await AddGroupAsync();
 
             var command = new AddChargeStationCommand
             {

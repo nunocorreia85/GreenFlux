@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.Connectors.Commands.AddConnector;
@@ -28,21 +29,9 @@ namespace GreenFlux.Application.IntegrationTests.Connectors
         [Test]
         public async Task ShouldCreateConnector()
         {
-            var group = new Group
-            {
-                Capacity = 100,
-                Name = "G1"
-            };
+            var group = await AddGroupAsync();
 
-            await AddAsync(group);
-
-            var chargeStation = new ChargeStation
-            {
-                GroupId = group.Id,
-                Name = "S1"
-            };
-
-            await AddAsync(chargeStation);
+            var chargeStation = await AddChargeStationAsync(group.Id);
 
             var command = new AddConnectorCommand
             {
@@ -52,12 +41,37 @@ namespace GreenFlux.Application.IntegrationTests.Connectors
             };
 
             var response = await SendAsync(command);
-            response.AddedConnectorId.Should().NotBeNull();
+            response.NewConnectorId.Should().NotBeNull();
 
-            var connector = await FindAsync<Connector>(response.AddedConnectorId, chargeStation.Id);
+            var connector = await FindAsync<Connector>(response.NewConnectorId, chargeStation.Id);
 
             connector.Should().NotBeNull();
             connector.MaxCurrent.Should().Be(command.MaxCurrent);
+        }
+        
+        [Test]
+        public async Task ShouldGetSuggestionIfCannotAdd()
+        {
+            var group = await AddGroupAsync();
+
+            var chargeStation = await AddChargeStationAsync(group.Id);
+
+            await AddConnectorAsync(chargeStation.Id, 1, 10);
+            await AddConnectorAsync(chargeStation.Id, 2, 90);
+            var command = new AddConnectorCommand
+            {
+                GroupId = group.Id,
+                ChargeStationId = chargeStation.Id,
+                MaxCurrent = 10
+            };
+
+            var response = await SendAsync(command);
+            response.NewConnectorId.Should().BeNull();
+            response.Suggestions.Count.Should().Be(1);
+            response.Suggestions[0].ConnectorsToRemove.Count.Should().Be(1);
+            response.Suggestions[0].ConnectorsToRemove[0].ConnectorId.Should().Be(1);
+            var connector = await FindAsync<Connector>(response.NewConnectorId, chargeStation.Id);
+            connector.Should().BeNull();
         }
     }
 }

@@ -2,13 +2,13 @@
 using GreenFlux.Application.Common.Mappings;
 using GreenFlux.Domain.Entities;
 
-namespace GreenFlux.Application.Dto
+namespace GreenFlux.Application.Dto.Queries
 {
-    public class ConnectorDto : IMapFrom<Connector>
+    public class ConnectorDto : DtoBase, IMapFrom<Connector>
     {
         public int ConnectorId { get; set; }
-        public float MaxCurrent { get; set; }
         public long ChargeStationId { get; set; }
+        public float MaxCurrent { get; set; }
 
         public void Mapping(Profile profile)
         {

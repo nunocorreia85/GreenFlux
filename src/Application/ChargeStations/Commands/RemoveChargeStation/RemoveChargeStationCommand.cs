@@ -12,42 +12,42 @@ namespace GreenFlux.Application.ChargeStations.Commands.RemoveChargeStation
 {
     public class RemoveChargeStationCommand : IRequest
     {
-        public long Id { get; set; }
+        public long ChargeStationId { get; set; }
+    }
+    
+    public class RemoveChargeStationCommandHandler : IRequestHandler<RemoveChargeStationCommand>
+    {
+        private readonly IApplicationDbContext _context;
 
-        public class RemoveChargeStationCommandHandler : IRequestHandler<RemoveChargeStationCommand>
+        public RemoveChargeStationCommandHandler(IApplicationDbContext context)
         {
-            private readonly IApplicationDbContext _context;
+            _context = context;
+        }
 
-            public RemoveChargeStationCommandHandler(IApplicationDbContext context)
+        public async Task<Unit> Handle(RemoveChargeStationCommand request, CancellationToken cancellationToken)
+        {
+            var requestId = request.ChargeStationId;
+            var chargeStation = await _context.ChargeStations
+                .FindAsync(new object[] {requestId}, cancellationToken);
+
+            if (chargeStation == null) throw new NotFoundException(nameof(chargeStation), requestId);
+
+            var connectorIds = await _context.Connectors
+                .Where(c => c.ChargeStationId == requestId)
+                .Select(c => c.Id)
+                .ToListAsync(cancellationToken);
+
+            _context.Connectors.RemoveRange(connectorIds.Select(i => new Connector
             {
-                _context = context;
-            }
+                Id = i,
+                ChargeStationId = requestId
+            }));
 
-            public async Task<Unit> Handle(RemoveChargeStationCommand request, CancellationToken cancellationToken)
-            {
-                var requestId = request.Id;
-                var chargeStation = await _context.ChargeStations
-                    .FindAsync(new object[] {requestId}, cancellationToken);
+            chargeStation.DomainEvents.Add(new ChargeStationRemovedEvent(chargeStation));
 
-                if (chargeStation == null) throw new NotFoundException(nameof(chargeStation), requestId);
-
-                var connectorIds = await _context.Connectors
-                    .Where(c => c.ChargeStationId == requestId)
-                    .Select(c => c.Id)
-                    .ToListAsync(cancellationToken);
-
-                _context.Connectors.RemoveRange(connectorIds.Select(i => new Connector
-                {
-                    Id = i,
-                    ChargeStationId = requestId
-                }));
-
-                chargeStation.DomainEvents.Add(new ChargeStationRemovedEvent(chargeStation));
-
-                _context.ChargeStations.Remove(chargeStation);
-                await _context.SaveChangesAsync(cancellationToken);
-                return Unit.Value;
-            }
+            _context.ChargeStations.Remove(chargeStation);
+            await _context.SaveChangesAsync(cancellationToken);
+            return Unit.Value;
         }
     }
 }

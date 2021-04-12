@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using GreenFlux.Application.Common.Exceptions;
+using GreenFlux.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -18,8 +19,8 @@ namespace GreenFlux.Api.Filters
             {
                 {typeof(ValidationException), HandleValidationException},
                 {typeof(NotFoundException), HandleNotFoundException},
-                {typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException},
-                {typeof(AddConnectorException), HandleAddConnectorException}
+                {typeof(EntityKeyGeneratorException), HandleBusinessDomainException},
+                {typeof(EntityRemoveException), HandleBusinessDomainException}
             };
         }
 
@@ -90,26 +91,9 @@ namespace GreenFlux.Api.Filters
             context.ExceptionHandled = true;
         }
 
-        private void HandleUnauthorizedAccessException(ExceptionContext context)
+        private void HandleBusinessDomainException(ExceptionContext context)
         {
-            var details = new ProblemDetails
-            {
-                Status = StatusCodes.Status401Unauthorized,
-                Title = "Unauthorized",
-                Type = "https://tools.ietf.org/html/rfc7235#section-3.1"
-            };
-
-            context.Result = new ObjectResult(details)
-            {
-                StatusCode = StatusCodes.Status401Unauthorized
-            };
-
-            context.ExceptionHandled = true;
-        }
-
-        private void HandleAddConnectorException(ExceptionContext context)
-        {
-            var exception = context.Exception as NotFoundException;
+            var exception = context.Exception;
 
             var details = new ProblemDetails
             {
