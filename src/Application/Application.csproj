@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ChargeStations\Models" />
     <Folder Include="ChargeStations\Queries" />
     <Folder Include="Connectors\EventHandlers" />
     <Folder Include="Connectors\Queries" />

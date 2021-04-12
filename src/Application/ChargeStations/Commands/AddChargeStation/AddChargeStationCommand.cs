@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using GreenFlux.Application.ChargeStations.Models;
 using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Domain.Entities;
 using MediatR;
@@ -12,7 +11,8 @@ namespace GreenFlux.Application.ChargeStations.Commands.AddChargeStation
     {
         public long GroupId { get; set; }
         public string Name { get; set; }
-        public List<AddChargeStationConnector> Connectors { get; set; } = new();
+
+        public float ConnectorMaxCurrent { get; set; }
         
         public class AddChargeStationCommandHandler : IRequestHandler<AddChargeStationCommand, long>
         {
@@ -28,17 +28,16 @@ namespace GreenFlux.Application.ChargeStations.Commands.AddChargeStation
                 var chargeStation = new ChargeStation
                 {
                     Name = request.Name,
-                    GroupId = request.GroupId
-                };
-
-                for (var i = 0; i < request.Connectors.Count; i++)
-                {
-                    chargeStation.Connectors.Add(new Connector
+                    GroupId = request.GroupId,
+                    Connectors = new List<Connector>()
                     {
-                        Id = i + 1,
-                        MaxCurrent = request.Connectors[i].MaxCurrent
-                    });
-                }
+                        new()
+                        {
+                            Id = 1,
+                            MaxCurrent = request.ConnectorMaxCurrent
+                        }
+                    }
+                };
 
                 _context.ChargeStations.Add(chargeStation);
             
