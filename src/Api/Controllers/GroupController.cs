@@ -27,7 +27,7 @@ namespace GreenFlux.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await Mediator.Send(new DeleteGroupCommand {Id = id});
+            await Mediator.Send(new DeleteGroupCommand {GroupId = id});
 
             return NoContent();
         }

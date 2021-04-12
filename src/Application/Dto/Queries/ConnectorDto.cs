@@ -8,13 +8,15 @@ namespace GreenFlux.Application.Dto.Queries
     {
         public int ConnectorId { get; set; }
         public long ChargeStationId { get; set; }
+        public long GroupId { get; set; }
         public float MaxCurrent { get; set; }
 
-        public void Mapping(Profile profile)
+        public static void Mapping(Profile profile)
         {
             profile.CreateMap<Connector, ConnectorDto>()
-                .ForMember(d => d.ConnectorId,
-                    opt => opt.MapFrom(s => s.Id));
+                .ForMember(d => d.ConnectorId, 
+                    opt => opt.MapFrom(s => s.Id))
+                .ForMember(dto => dto.GroupId, opt => opt.MapFrom(c => c.ChargeStation.GroupId));
         }
     }
 }

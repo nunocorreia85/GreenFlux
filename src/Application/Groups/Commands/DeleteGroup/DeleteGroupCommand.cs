@@ -12,7 +12,7 @@ namespace GreenFlux.Application.Groups.Commands.DeleteGroup
 {
     public class DeleteGroupCommand : IRequest
     {
-        public long Id { get; set; }
+        public long GroupId { get; set; }
     }
     
     public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand>
@@ -26,12 +26,12 @@ namespace GreenFlux.Application.Groups.Commands.DeleteGroup
 
         public async Task<Unit> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
         {
-            var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == request.Id, cancellationToken);
+            var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == request.GroupId, cancellationToken);
 
-            if (group == null) throw new NotFoundException(nameof(Group), request.Id);
+            if (group == null) throw new NotFoundException(nameof(Group), request.GroupId);
 
             var chargeStationIds = await _context.ChargeStations
-                .Where(c => c.Id == request.Id)
+                .Where(c => c.Id == request.GroupId)
                 .Select(c => c.Id)
                 .ToListAsync(cancellationToken);
 

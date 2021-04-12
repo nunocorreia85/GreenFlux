@@ -9,10 +9,12 @@ namespace GreenFlux.Application.Dto.Queries
     {
         public long GroupId { get; set; }
         public long ChargeStationId { get; set; }
+        
         public string Name { get; set; }
+        
         public List<ConnectorDto> Connectors { get; set; }
 
-        public void Mapping(Profile profile)
+        public static void Mapping(Profile profile)
         {
             profile.CreateMap<ChargeStation, ChargeStationDto>()
                 .ForMember(d => d.ChargeStationId,
