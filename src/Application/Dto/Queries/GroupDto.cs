@@ -11,12 +11,12 @@ namespace GreenFlux.Application.Dto.Queries
         public string Name { get; set; }
         public float Capacity { get; set; }
         public List<ChargeStationDto> ChargeStations { get; set; }
-        
+
         public static void Mapping(Profile profile)
         {
             profile.CreateMap<Group, GroupDto>()
                 .ForMember(d => d.GroupId,
-                    opt => 
+                    opt =>
                         opt.MapFrom(s => s.Id));
         }
     }

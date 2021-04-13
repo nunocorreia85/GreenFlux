@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using GreenFlux.Application.Common.Models;
-using GreenFlux.Application.Dto;
 using GreenFlux.Application.Dto.Queries;
 using GreenFlux.Application.Groups.Commands.CreateGroup;
 using GreenFlux.Application.Groups.Commands.DeleteGroup;
+using GreenFlux.Application.Groups.Commands.UpdateGroup;
 using GreenFlux.Application.Groups.Queries.GetGroupsWithPagination;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +14,13 @@ namespace GreenFlux.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<long>> Create(CreateGroupCommand command)
         {
-            return await Mediator.Send(command);
+            return Ok(await Mediator.Send(command));
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<long>> Update(UpdateGroupCommand command)
+        {
+            return Ok(await Mediator.Send(command));
         }
 
         [HttpGet]

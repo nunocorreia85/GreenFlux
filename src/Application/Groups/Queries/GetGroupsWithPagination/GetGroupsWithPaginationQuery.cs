@@ -7,7 +7,6 @@ using AutoMapper.QueryableExtensions;
 using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Application.Common.Mappings;
 using GreenFlux.Application.Common.Models;
-using GreenFlux.Application.Dto;
 using GreenFlux.Application.Dto.Queries;
 using GreenFlux.Domain.Entities;
 using MediatR;

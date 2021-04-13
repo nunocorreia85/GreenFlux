@@ -9,9 +9,9 @@ namespace GreenFlux.Application.Dto.Queries
     {
         public long GroupId { get; set; }
         public long ChargeStationId { get; set; }
-        
+
         public string Name { get; set; }
-        
+
         public List<ConnectorDto> Connectors { get; set; }
 
         public static void Mapping(Profile profile)

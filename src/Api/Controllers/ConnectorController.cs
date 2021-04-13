@@ -2,7 +2,6 @@
 using GreenFlux.Application.Connectors.Commands.AddConnector;
 using GreenFlux.Application.Connectors.Commands.RemoveConnector;
 using GreenFlux.Application.Connectors.Commands.UpdateConnector;
-using GreenFlux.Application.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GreenFlux.Api.Controllers
@@ -23,7 +22,7 @@ namespace GreenFlux.Api.Controllers
 
             return NoContent();
         }
-        
+
         [HttpPut]
         public async Task<ActionResult> Update(UpdateConnectorCommand command)
         {

@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentAssertions;
 using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.Connectors.Commands.AddConnector;
@@ -48,7 +47,7 @@ namespace GreenFlux.Application.IntegrationTests.Connectors
             connector.Should().NotBeNull();
             connector.MaxCurrent.Should().Be(command.MaxCurrent);
         }
-        
+
         [Test]
         public async Task ShouldGetSuggestionIfCannotAdd()
         {

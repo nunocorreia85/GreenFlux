@@ -2,7 +2,6 @@
 using System.Runtime.Serialization;
 using AutoMapper;
 using GreenFlux.Application.Common.Mappings;
-using GreenFlux.Application.Dto;
 using GreenFlux.Application.Dto.Queries;
 using GreenFlux.Domain.Entities;
 using NUnit.Framework;
@@ -40,8 +39,9 @@ namespace GreenFlux.Application.UnitTests.Common.Mappings
 
         private object GetInstanceOf(Type type)
         {
-            return type.GetConstructor(Type.EmptyTypes) != null ? 
-                Activator.CreateInstance(type) : FormatterServices.GetUninitializedObject(type);
+            return type.GetConstructor(Type.EmptyTypes) != null
+                ? Activator.CreateInstance(type)
+                : FormatterServices.GetUninitializedObject(type);
 
             // Type without parameterless constructor
         }

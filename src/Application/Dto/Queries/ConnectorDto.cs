@@ -14,7 +14,7 @@ namespace GreenFlux.Application.Dto.Queries
         public static void Mapping(Profile profile)
         {
             profile.CreateMap<Connector, ConnectorDto>()
-                .ForMember(d => d.ConnectorId, 
+                .ForMember(d => d.ConnectorId,
                     opt => opt.MapFrom(s => s.Id))
                 .ForMember(dto => dto.GroupId, opt => opt.MapFrom(c => c.ChargeStation.GroupId));
         }

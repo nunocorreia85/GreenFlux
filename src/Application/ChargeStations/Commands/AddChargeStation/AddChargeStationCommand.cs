@@ -14,7 +14,7 @@ namespace GreenFlux.Application.ChargeStations.Commands.AddChargeStation
 
         public float ConnectorMaxCurrent { get; set; }
     }
-    
+
     public class AddChargeStationCommandHandler : IRequestHandler<AddChargeStationCommand, long>
     {
         private readonly IApplicationDbContext _context;

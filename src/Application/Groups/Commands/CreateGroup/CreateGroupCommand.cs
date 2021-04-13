@@ -11,7 +11,7 @@ namespace GreenFlux.Application.Groups.Commands.CreateGroup
         public string Name { get; set; }
         public float Capacity { get; set; }
     }
-    
+
     public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, long>
     {
         private readonly IApplicationDbContext _context;

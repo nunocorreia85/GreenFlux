@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
-using FluentValidation.Results;
 using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.Common.Interfaces;
 using GreenFlux.Application.Connectors.Commands.Common;
@@ -12,7 +8,6 @@ using GreenFlux.Domain.Entities;
 using GreenFlux.Domain.Exceptions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using ValidationException = GreenFlux.Application.Common.Exceptions.ValidationException;
 
 namespace GreenFlux.Application.Connectors.Commands.RemoveConnector
 {
@@ -22,12 +17,13 @@ namespace GreenFlux.Application.Connectors.Commands.RemoveConnector
 
         public long ChargeStationId { get; set; }
     }
-    
-    public class RemoveConnectorCommandHandler : ConnectorCommandHandlerBase, 
+
+    public class RemoveConnectorCommandHandler : ConnectorCommandHandlerBase,
         IRequestHandler<RemoveConnectorCommand>
     {
         public RemoveConnectorCommandHandler(IApplicationDbContext context) : base(context)
-        { }
+        {
+        }
 
         public async Task<Unit> Handle(RemoveConnectorCommand request, CancellationToken cancellationToken)
         {
@@ -35,15 +31,13 @@ namespace GreenFlux.Application.Connectors.Commands.RemoveConnector
                 .Where(c => c.ChargeStationId == request.ChargeStationId)
                 .Select(c => c.Id)
                 .ToListAsync(cancellationToken);
-                
-            if(!stationConnectorIds.Contains(request.ConnectorId))
+
+            if (!stationConnectorIds.Contains(request.ConnectorId))
                 throw new NotFoundException(nameof(Connector), request.ConnectorId);
 
             if (stationConnectorIds.Count() == 1)
-            {
                 throw new EntityRemoveException("Charge station cannot exist without a connector");
-            }
-            
+
             _context.Connectors.Remove(new Connector
             {
                 Id = request.ConnectorId,

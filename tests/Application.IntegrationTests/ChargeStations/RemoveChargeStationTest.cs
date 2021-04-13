@@ -15,7 +15,7 @@ namespace GreenFlux.Application.IntegrationTests.ChargeStations
         [Test]
         public void ShouldRequireValidChargeStationId()
         {
-            var command = new RemoveChargeStationCommand { ChargeStationId = 99 };
+            var command = new RemoveChargeStationCommand {ChargeStationId = 99};
 
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().Throw<NotFoundException>();

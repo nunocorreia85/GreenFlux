@@ -14,7 +14,7 @@ namespace GreenFlux.Application.ChargeStations.Commands.RemoveChargeStation
     {
         public long ChargeStationId { get; set; }
     }
-    
+
     public class RemoveChargeStationCommandHandler : IRequestHandler<RemoveChargeStationCommand>
     {
         private readonly IApplicationDbContext _context;

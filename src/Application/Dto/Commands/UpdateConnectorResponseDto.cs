@@ -1,6 +1,6 @@
 ﻿namespace GreenFlux.Application.Dto.Commands
 {
-    public class UpdateConnectorResponseDto : ConnectorResponseDto 
+    public class UpdateConnectorResponseDto : ConnectorResponseDto
     {
     }
 }

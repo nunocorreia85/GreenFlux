@@ -14,7 +14,7 @@ namespace GreenFlux.Application.Groups.Commands.DeleteGroup
     {
         public long GroupId { get; set; }
     }
-    
+
     public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand>
     {
         private readonly IApplicationDbContext _context;
@@ -26,7 +26,7 @@ namespace GreenFlux.Application.Groups.Commands.DeleteGroup
 
         public async Task<Unit> Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
         {
-            var group = await _context.Groups.FirstOrDefaultAsync(g => g.Id == request.GroupId, cancellationToken);
+            var group = await _context.Groups.FindAsync(new object[] {request.GroupId}, cancellationToken);
 
             if (group == null) throw new NotFoundException(nameof(Group), request.GroupId);
 

@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using GreenFlux.Application.Common.Exceptions;
 using GreenFlux.Application.Common.Interfaces;
-using GreenFlux.Application.Dto;
 using GreenFlux.Application.Dto.Commands;
 using GreenFlux.Application.Dto.Queries;
 using GreenFlux.Domain.Entities;
@@ -27,14 +26,14 @@ namespace GreenFlux.Application.Connectors.Commands.Common
             return combinations
                 .OrderBy(c => c.Length)
                 .Select(lst => new SuggestionDto
-            {
-                ConnectorsToRemove = lst.Select(c => new ConnectorDto
                 {
-                    ConnectorId = c.Id,
-                    MaxCurrent = c.MaxCurrent,
-                    ChargeStationId = c.ChargeStationId
-                }).ToList()
-            }).ToList();
+                    ConnectorsToRemove = lst.Select(c => new ConnectorDto
+                    {
+                        ConnectorId = c.Id,
+                        MaxCurrent = c.MaxCurrent,
+                        ChargeStationId = c.ChargeStationId
+                    }).ToList()
+                }).ToList();
         }
 
         protected static int GetConnectorAvailableId(List<Connector> connectors, long requestChargeStationId)
@@ -51,7 +50,8 @@ namespace GreenFlux.Application.Connectors.Commands.Common
             throw new EntityKeyGeneratorException("Failed to generate a new connector id.");
         }
 
-        protected async Task<List<Connector>> GetGroupConnectors(long requestGroupId, CancellationToken cancellationToken)
+        protected async Task<List<Connector>> GetGroupConnectors(long requestGroupId,
+            CancellationToken cancellationToken)
         {
             var connectors = await _context.ChargeStations
                 .Where(station => station.GroupId == requestGroupId)
@@ -63,13 +63,14 @@ namespace GreenFlux.Application.Connectors.Commands.Common
         protected async Task<Group> GetGroup(long requestGroupId, CancellationToken cancellationToken)
         {
             var group = await _context.Groups.FindAsync(new object[] {requestGroupId},
-                cancellationToken: cancellationToken);
+                cancellationToken);
 
-            if (@group == null) throw new NotFoundException(nameof(Group), requestGroupId);
-            return @group;
+            if (group == null) throw new NotFoundException(nameof(Group), requestGroupId);
+            return group;
         }
 
-        protected static bool ExceedsGroupCapacity(List<Connector> connectors, float connectorMaxCurrent, float groupMaxCapacity)
+        protected static bool ExceedsGroupCapacity(List<Connector> connectors, float connectorMaxCurrent,
+            float groupMaxCapacity)
         {
             return connectors.Sum(arg => arg.MaxCurrent) + connectorMaxCurrent > groupMaxCapacity;
         }
